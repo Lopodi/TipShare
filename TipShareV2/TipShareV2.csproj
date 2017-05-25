@@ -69,7 +69,10 @@
     <Content Include="App_Data\TipShare_log.ldf">
       <DependentUpon>TipShare.mdf</DependentUpon>
     </Content>
+    <Content Include="Default.aspx" />
     <Content Include="packages.config" />
+    <Content Include="Webpages\UserAdministration.aspx" />
+    <None Include="Properties\PublishProfiles\TipShareV220170511085013 - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -91,6 +94,13 @@
     <Content Include="Webpages\TipAllocation.aspx" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Webpages\Dashboard.aspx.cs">
       <DependentUpon>Dashboard.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -150,6 +160,13 @@
     </Compile>
     <Compile Include="Webpages\TipAllocation.aspx.designer.cs">
       <DependentUpon>TipAllocation.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Webpages\UserAdministration.aspx.cs">
+      <DependentUpon>UserAdministration.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Webpages\UserAdministration.aspx.designer.cs">
+      <DependentUpon>UserAdministration.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

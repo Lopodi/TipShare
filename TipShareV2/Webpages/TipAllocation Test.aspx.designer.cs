@@ -22,22 +22,31 @@ namespace TipShareV2.Webpages {
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
         
         /// <summary>
-        /// gvDailyTotals control.
+        /// lblLunchServerError control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvDailyTotals;
+        protected global::System.Web.UI.WebControls.Label lblLunchServerError;
         
         /// <summary>
-        /// lblLunchServer control.
+        /// btnShiftDate control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblLunchServer;
+        protected global::System.Web.UI.WebControls.Button btnShiftDate;
+        
+        /// <summary>
+        /// cldShiftDate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Calendar cldShiftDate;
         
         /// <summary>
         /// ddlLunchServer control.
@@ -49,76 +58,40 @@ namespace TipShareV2.Webpages {
         protected global::System.Web.UI.WebControls.DropDownList ddlLunchServer;
         
         /// <summary>
-        /// lblLunchGrossSales control.
+        /// txtLunchGrossSales control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblLunchGrossSales;
+        protected global::System.Web.UI.WebControls.TextBox txtLunchGrossSales;
         
         /// <summary>
-        /// txtLunchGrossSalesTest control.
+        /// txtLunchGrossTips control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtLunchGrossSalesTest;
+        protected global::System.Web.UI.WebControls.TextBox txtLunchGrossTips;
         
         /// <summary>
-        /// lblLunchGrossTips control.
+        /// txtLunchTipAlloc control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblLunchGrossTips;
+        protected global::System.Web.UI.WebControls.TextBox txtLunchTipAlloc;
         
         /// <summary>
-        /// txtLunchGrossTipsTest control.
+        /// lblLunchTipPoolCalc control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtLunchGrossTipsTest;
-        
-        /// <summary>
-        /// lblLunchTipAlloc control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblLunchTipAlloc;
-        
-        /// <summary>
-        /// txtLunchTipAllocTest control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtLunchTipAllocTest;
-        
-        /// <summary>
-        /// lblLunchTipPool control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblLunchTipPool;
-        
-        /// <summary>
-        /// lblLunchTipPoolCalcTest control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblLunchTipPoolCalcTest;
+        protected global::System.Web.UI.WebControls.Label lblLunchTipPoolCalc;
         
         /// <summary>
         /// btnSaveLunch control.
@@ -128,6 +101,51 @@ namespace TipShareV2.Webpages {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnSaveLunch;
+        
+        /// <summary>
+        /// pnlLunchServer control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlLunchServer;
+        
+        /// <summary>
+        /// phLunchServer control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.PlaceHolder phLunchServer;
+        
+        /// <summary>
+        /// btnAddNewLunchServer control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnAddNewLunchServer;
+        
+        /// <summary>
+        /// GridView1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView GridView1;
+        
+        /// <summary>
+        /// SqlDataSource1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.SqlDataSource SqlDataSource1;
         
         /// <summary>
         /// lblSupport control.

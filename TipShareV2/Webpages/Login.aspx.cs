@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -23,57 +24,69 @@ namespace TipShareV2
             string email = txtEnterEmail.Text;
             string password = txtEnterPassword.Text;
 
-            if (string.IsNullOrEmpty(email))
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
             {
-                lblEmailError.Text = "Please enter your email";
+                lblLoginError.Text = "All fields are required";
                 return;
             }
-            if (string.IsNullOrEmpty(password))
+          
+            SqlConnection conn = null;
+            string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            conn = new SqlConnection(connString);
+
+            try
+
             {
-                lblPasswordError.Text = "Please enter your password ";
-                return;
-            }
+                //  alternate code --> string query = 
+                // "SELECT UserID FROM [User] WHERE Email='" + email + "' AND UserPassword ='" + password +"'";
 
-            Response.Redirect("Home.aspx");
+                var query = String.Format("SELECT UserID FROM [User] WHERE Email = '{0}' AND " +
+                    "UserPassword = '{1}'", email, password); 
 
-            //SqlConnection conn = null;
-            //string connString = ConfigurationManager.ConnectionStrings[ConnectionString].ConnectionString;
-            //conn = new SqlConnection(connString);
+                SqlCommand cmd = new SqlCommand(query, conn);
+                conn.Open();
+                Int32 userID = Convert.ToInt32(cmd.ExecuteScalar());
+                cmd.Dispose();
 
-            //try
+                if (userID < 1)
+                {
+                    lblLoginError.Text = "Please enter valid login credentials";
+                    return;
+                }
+                else
+                // store database value in session cookie
 
-            //{
-            //    string query = "SELECT t.TweetMessage, t.TweetDate, '@' + u.ScreenName AS Tweeter 
-            //    FROM [Tweet] t INNER JOIN [Users] u ON t.PostedBy = u.UserId"; " +
-            //    "SqlCommand cmd = new SqlCommand(query, conn); conn.Open(); " +
-            //    "SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); " +
-            //    "gridTable.Load(dr); " +
-            //}
+                Session["userIDCookie"] = userID.ToString();
 
-            //catch (Exception ex)
+             //  if (Session["userIDCookie"] == null)
+             //  {
+             //      lblLoginError.Text = "Please enter valid login credentials";
+             //       return;
+             //   }
 
-            //{
-            //    // handle error here Response.Write("Error occured" + ex.Message); 
-
-            //}
-
-            //finally
-
-            //{
-            //    conn.Close();
-        }
-
-            // make database call
-
-            /* if ((email == "yes") && (password == "no")) */
-            //{
+                // redirect to landing page
+                // put redirect in try block incase anything fails, it will not redirect, but 74 on will
+                // be executed & connection closed
+                          
+                 Response.Redirect("TipAllocation.aspx");
                 
-           // }
-            /* else
-             {
-                 lblLoginError.Text = "Please enter valid login credentials"; 
-             }*/
+            }
 
-       // }
+            catch (Exception ex)
+
+            {
+             Response.Write("Error occured" + ex.Message);
+             lblLoginError.Text = "Please enter valid login credentials";
+
+            }
+
+            finally
+
+            {
+                conn.Close();
+            }
+
+           
+        }
     }
 }

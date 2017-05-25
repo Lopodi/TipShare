@@ -10,7 +10,7 @@
 namespace TipShareV2.Webpages {
     
     
-    public partial class EmployeeAdministration {
+    public partial class UserAdministration {
         
         /// <summary>
         /// form1 control.
@@ -31,30 +31,21 @@ namespace TipShareV2.Webpages {
         protected global::System.Web.UI.WebControls.Button btnLogout;
         
         /// <summary>
-        /// gvEmployee control.
+        /// gvUserAdmin control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvEmployee;
+        protected global::System.Web.UI.WebControls.GridView gvUserAdmin;
         
         /// <summary>
-        /// lblEmployeeID control.
+        /// sdsUserAdmin control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblEmployeeID;
-        
-        /// <summary>
-        /// sdsEmployee control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.SqlDataSource sdsEmployee;
+        protected global::System.Web.UI.WebControls.SqlDataSource sdsUserAdmin;
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -24,11 +26,11 @@ namespace TipShareV2
             string LastName = txtLastName.Text;
 
             if (string.IsNullOrEmpty(Email) ||
-               string.IsNullOrEmpty(ConfirmEmail) ||
-               string.IsNullOrEmpty(Password) ||
-               string.IsNullOrEmpty(ConfirmPassword) ||
-               string.IsNullOrEmpty(FirstName) ||
-               string.IsNullOrEmpty(LastName))
+                string.IsNullOrEmpty(ConfirmEmail) ||
+                string.IsNullOrEmpty(Password) ||
+                string.IsNullOrEmpty(ConfirmPassword) ||
+                string.IsNullOrEmpty(FirstName) ||
+                string.IsNullOrEmpty(LastName))
             {
                 lblNullError.Text = "All fields are required";
                 return;
@@ -63,9 +65,40 @@ namespace TipShareV2
             }
             lblPasswordMismatchError.Text = "";
 
-            lblConfirm.Text = "Your request has been submitted for approval. You will receive a confirmation email" +
-                " once your request has been reviewed.";
+            SqlConnection conn = null;
 
+            string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            conn = new SqlConnection(connString);
+
+            try
+            {
+
+                var query = String.Format("INSERT INTO [User] ([FirstName], [LastName]," +
+                    "[Email], [UserPassword], [UserStatus], [StatusDate], [CreatedBy], [DateCreated]) " +
+                    "VALUES('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')",
+                    FirstName, LastName, Email, Password, "Pending Approval", DateTime.Now, "System", DateTime.Now);
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+
+                pnlRegister.Visible = false;
+                lblConfirm.Text = "Success! Your request has been submitted for approval. " +
+                    "The system administrator will contact you " +
+                    "once your request has been reviewed.";
+
+            }
+            catch (Exception ex)
+            {
+                // handle error here
+                Response.Write(" Error: " + ex.Message);
+            }
+            finally
+            {
+                conn.Close();
+            }
+
+           
         }
 
 
