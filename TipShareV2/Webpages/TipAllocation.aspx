@@ -17,7 +17,7 @@
             <h3> Enter Tips </h3>
 
             <asp:Button ID="btnShiftDate" Text="Select Date" OnClick="btnShiftDate_Click" runat="server" />
-            <asp:Calendar ID="cldShiftDate" visible="false" runat="server"
+            <asp:Calendar ID="cldShiftDate" visible="true" runat="server"
                 OnSelectionChanged="cldShiftDate_SelectionChanged" />
            
             <br />               
@@ -28,7 +28,10 @@
 
                 <asp:Label ID="lblLunchServer" Text="Server" runat="server" />
                 <asp:DropDownList ID="ddlLunchServer" runat="server" AutoPostBack="True" 
-                    DataSourceID="sdsEmployee" DataTextField="Name" DataValueField="EmployeeID"> </asp:DropDownList>
+                    DataSourceID="sdsEmployee" DataTextField="Name" DataValueField="EmployeeID"
+                    AppendDataBoundItems="True" Selected="True" Value="0">
+                    <asp:ListItem Selected="True" Value="0">Select Server</asp:ListItem>
+                </asp:DropDownList>
               <%--  <asp:RequiredFieldValidator ID="rfvLunchServer" ErrorMessage="Server is a required field" 
                     ControlToValidate="ddlLunchServer" runat="server" />--%>
 
@@ -53,18 +56,25 @@
 
                 <asp:Button ID="btnSaveLunch" Text="Save" runat="server" OnClick="btnSaveLunch_Click" />
                     <br />
-                <asp:PlaceHolder ID="phNewLunchServer" runat="server"></asp:PlaceHolder>
+
 
                 <%--<asp:ValidationSummary ValidationGroup="LunchServer" ID="vsLunchServerError" runat="server" />--%>
                   </asp:Panel>  
-                <asp:GridView ID="gvLunchTipAlloc" runat="server" AllowSorting="True" AutoGenerateColumns="False" DataKeyNames="GratuityID,EmployeeID,UserID" DataSourceID="SqlDsGratuity">
+                <asp:GridView ID="gvLunchTipAlloc" runat="server" AllowSorting="True" AutoGenerateColumns="False" 
+                    DataKeyNames="GratuityID,EmployeeID,UserID" DataSourceID="sdsGratuity" Visible="false">
                     <Columns>
                         <asp:CommandField ShowEditButton="True" />
                         <asp:BoundField DataField="EmployeeName" HeaderText="Select Server" ReadOnly="True" SortExpression="EmployeeName" />
-                        <asp:BoundField DataField="GrossSales" HeaderText="Gross Sales Earned" SortExpression="GrossSales" />
-                        <asp:BoundField DataField="TipsEarned" HeaderText="Tips Earned" SortExpression="TipsEarned" />
-                        <asp:BoundField DataField="TipPercentContributed" HeaderText="Percent Contributed" SortExpression="TipPercentContributed" />
-                        <asp:BoundField DataField="TipsAllocated" HeaderText="Tips Allocated" ReadOnly="True" SortExpression="TipsAllocated" />
+                        <asp:BoundField DataField="GrossSales" HeaderText="Gross Sales Earned" SortExpression="GrossSales" DataFormatString="{0:c}" >
+                        <ItemStyle HorizontalAlign="Right" />
+                        </asp:BoundField>
+                        <asp:BoundField DataField="TipsEarned" HeaderText="Tips Earned" SortExpression="TipsEarned" DataFormatString="{0:c}" >
+                        <ItemStyle HorizontalAlign="Right" />
+                        </asp:BoundField>
+                        <asp:BoundField DataField="TipPercentContributed" HeaderText="Percent Contributed" SortExpression="TipPercentContributed" DataFormatString="{0:p}" />
+                        <asp:BoundField DataField="TipsAllocated" HeaderText="Tips Allocated" ReadOnly="True" SortExpression="TipsAllocated" DataFormatString="{0:c}" >
+                        <ItemStyle HorizontalAlign="Right" />
+                        </asp:BoundField>
                         <asp:BoundField DataField="TipPercentAllocated" HeaderText="TipPercentAllocated" SortExpression="TipPercentAllocated" Visible="False" />
                         <asp:BoundField DataField="EmployeeID" HeaderText="EmployeeID" SortExpression="EmployeeID" Visible="False" />
                         <asp:BoundField DataField="UserID" HeaderText="UserID" SortExpression="UserID" Visible="False" />
@@ -80,7 +90,27 @@
                 </asp:GridView>
                 <asp:Label ID="lblLunchServerError" runat="server" />
             </asp:Panel>
-            <asp:SqlDataSource ID="SqlDsGratuity" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>" DeleteCommand="DELETE FROM [Gratuity] WHERE [GratuityID] = @GratuityID" InsertCommand="INSERT INTO [Gratuity] ([EmployeeID], [UserID], [GrossSales], [TipsEarned], [TipsAllocated], [TipPercentAllocated], [TipPercentContributed], [HoursWorked], [DateCreated], [Shift], [ShiftDate], [CreatedBy], [LastUpdateDate], [LastCreatedBy]) VALUES (@EmployeeID, @UserID, @GrossSales, @TipsEarned, @TipsAllocated, @TipPercentAllocated, @TipPercentContributed, @HoursWorked, @DateCreated, @Shift, @ShiftDate, @CreatedBy, @LastUpdateDate, @LastCreatedBy)" SelectCommand="SELECT Gratuity.GratuityID, Gratuity.EmployeeID, Gratuity.UserID, Gratuity.GrossSales, Gratuity.TipsEarned, Gratuity.TipsAllocated, Gratuity.TipPercentAllocated, Gratuity.TipPercentContributed, Gratuity.HoursWorked, Gratuity.Shift, Gratuity.ShiftDate, Gratuity.CreatedBy, Gratuity.LastUpdateDate, Gratuity.LastCreatedBy, Employee.FirstName + ' ' + Employee.LastName AS EmployeeName, Gratuity.DateCreated FROM Gratuity INNER JOIN Employee ON Gratuity.EmployeeID = Employee.EmployeeID" UpdateCommand="UPDATE [Gratuity] SET [EmployeeID] = @EmployeeID, [UserID] = @UserID, [GrossSales] = @GrossSales, [TipsEarned] = @TipsEarned, [TipsAllocated] = @TipsAllocated, [TipPercentAllocated] = @TipPercentAllocated, [TipPercentContributed] = @TipPercentContributed, [HoursWorked] = @HoursWorked, [DateCreated] = @DateCreated, [Shift] = @Shift, [ShiftDate] = @ShiftDate, [CreatedBy] = @CreatedBy, [LastUpdateDate] = @LastUpdateDate, [LastCreatedBy] = @LastCreatedBy WHERE [GratuityID] = @GratuityID">
+            <asp:SqlDataSource ID="sdsGratuity" runat="server" 
+                ConnectionString="<%$ ConnectionStrings:ConnectionString %>" 
+                DeleteCommand="DELETE FROM [Gratuity] WHERE [GratuityID] = @GratuityID" 
+                InsertCommand="INSERT INTO [Gratuity] ([EmployeeID], [UserID], [GrossSales], [TipsEarned], 
+                [TipsAllocated], [TipPercentAllocated], [TipPercentContributed], [HoursWorked], [DateCreated], 
+                [Shift], [ShiftDate], [CreatedBy], [LastUpdateDate], [LastCreatedBy]) 
+                VALUES (@EmployeeID, @UserID, @GrossSales, @TipsEarned, @TipsAllocated, @TipPercentAllocated, 
+                @TipPercentContributed, @HoursWorked, @DateCreated, @Shift, @ShiftDate, @CreatedBy, 
+                @LastUpdateDate, @LastCreatedBy)" SelectCommand="SELECT Gratuity.GratuityID, 
+                Gratuity.EmployeeID, Gratuity.UserID, Gratuity.GrossSales, Gratuity.TipsEarned, 
+                Gratuity.TipsAllocated, Gratuity.TipPercentAllocated, Gratuity.TipPercentContributed, 
+                Gratuity.HoursWorked, Gratuity.Shift, Gratuity.ShiftDate, Gratuity.CreatedBy, 
+                Gratuity.LastUpdateDate, Gratuity.LastCreatedBy, Employee.FirstName + ' ' + Employee.LastName 
+                AS EmployeeName, Gratuity.DateCreated FROM Gratuity INNER JOIN Employee 
+                ON Gratuity.EmployeeID = Employee.EmployeeID" 
+                UpdateCommand="UPDATE [Gratuity] SET [EmployeeID] = @EmployeeID, [UserID] = @UserID, 
+                [GrossSales] = @GrossSales, [TipsEarned] = @TipsEarned, [TipsAllocated] = @TipsAllocated, 
+                [TipPercentAllocated] = @TipPercentAllocated, [TipPercentContributed] = @TipPercentContributed, 
+                [HoursWorked] = @HoursWorked, [DateCreated] = @DateCreated, [Shift] = @Shift, 
+                [ShiftDate] = @ShiftDate, [CreatedBy] = @CreatedBy, [LastUpdateDate] = @LastUpdateDate, 
+                [LastCreatedBy] = @LastCreatedBy WHERE [GratuityID] = @GratuityID">
                 <DeleteParameters>
                     <asp:Parameter Name="GratuityID" Type="Int32" />
                 </DeleteParameters>

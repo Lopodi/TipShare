@@ -12,6 +12,8 @@ namespace TipShareV2.Webpages
 {
     public partial class TipAllocation : System.Web.UI.Page
     {
+        private SqlCommand cmd;
+
         public int ConnectionString { get; private set; }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -23,7 +25,8 @@ namespace TipShareV2.Webpages
             }
             else
                 Response.Redirect("Login.aspx");
-        }
+
+            }
 
         protected void btnLogout_Click(object sender, EventArgs e)
         {
@@ -36,47 +39,59 @@ namespace TipShareV2.Webpages
             cldShiftDate.Visible = true;
         }
 
-        protected void cldShiftDate_SelectionChanged(object sender, EventArgs e)
-        {
-            DateTime shiftDate = cldShiftDate.SelectedDate;
-            btnShiftDate.Text = "Shift Date: " + shiftDate.ToShortDateString();
-
-            //lblShiftDate.Text = cldShiftDate.SelectedDate.ToString();
-            //lblShiftDate.Visible = true;
-            cldShiftDate.Visible = false;
-
-            SqlConnection conn = null;
-            DataTable gridTable = new DataTable();
-
-            try
-
+            protected void cldShiftDate_SelectionChanged(object sender, EventArgs e)
             {
-                string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-                conn = new SqlConnection(connString); 
-                string query = "SELECT t.TweetMessage, t.TweetDate, '@' + u.ScreenName AS Tweeter FROM [Tweet] t INNER JOIN [Users] u ON t.PostedBy = u.UserId";
+                DateTime shiftDate = cldShiftDate.SelectedDate;
+                btnShiftDate.Text = "Shift Date: " + shiftDate.ToShortDateString();
+                gvLunchTipAlloc.Visible = true;
 
-                SqlCommand cmd = new SqlCommand(query, conn);
-                conn.Open(); SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-                gridTable.Load(dr);
-            }
+                //lblShiftDate.Text = cldShiftDate.SelectedDate.ToString();
+                //lblShiftDate.Visible = true;
+                //cldShiftDate.Visible = false; - uncomment if don't want calendar to show until selecting date
+                       
+                SqlConnection conn = null;
+                DataTable gridTable = new DataTable();
 
-            catch (Exception ex)
+                  try
 
-            {
-                Response.Write("Error occured" + ex.Message);
-            }
+                   {
+                       string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+                       conn = new SqlConnection(connString);
+                    string query = ("SELECT Gratuity.GratuityID, Gratuity.EmployeeID, Gratuity.UserID, " +
+                    "Gratuity.GrossSales, Gratuity.TipsEarned, Gratuity.TipsAllocated, " +
+                    "Gratuity.TipPercentAllocated, Gratuity.TipPercentContributed, Gratuity.HoursWorked, " +
+                    "Gratuity.Shift, Gratuity.ShiftDate, Gratuity.CreatedBy, Gratuity.LastUpdateDate, " +
+                    "Gratuity.LastCreatedBy, Employee.FirstName + ' ' + Employee.LastName AS EmployeeName, " +
+                    "Gratuity.DateCreated FROM Gratuity INNER JOIN Employee " +
+                    "ON Gratuity.EmployeeID = Employee.EmployeeID " +
+                    "WHERE Gratuity.ShiftDate ='" + shiftDate.ToShortDateString() + "'"); 
 
-            finally
-            {
-                conn.Close();
+                       SqlCommand cmd = new SqlCommand(query, conn);
+                       conn.Open();
+                       SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                       gridTable.Load(dr);
+                   }
 
-            }
+                   catch (Exception ex)
 
-            // bind the appropriate SQL results to your gridview control 
+                   {
+                       Response.Write("Error occured" + ex.Message);
+                   }
 
-            gvLunchTipAlloc.DataSource = gridTable;
-            gvLunchTipAlloc.DataBind();
+                   finally
+                   {
+                       conn.Close();
+
+                   }
+
+                // bind the appropriate SQL results to your gridview control 
+
+                gvLunchTipAlloc.DataSource = gridTable;
+                gvLunchTipAlloc.DataBind();
+               
+               
         }
+        
       
         protected void btnSaveLunch_Click(object sender, EventArgs e)
         {
@@ -93,7 +108,7 @@ namespace TipShareV2.Webpages
             double tipsEarned;
             double tipPoolAlloc;
             string lunchTipPoolCalc;
-            string lunchTipPoolTotalCalc;
+            string lunchTipPoolTotal;
 
             try
             {
@@ -108,8 +123,9 @@ namespace TipShareV2.Webpages
                           
 
                 lunchTipPoolCalc = lblLunchTipPoolCalc.Text = tipPoolAlloc.ToString("C");
-                lunchTipPoolTotalCalc = lunchTipPoolCalc;
-                //How to get the variable to dynamically update with new info?
+                //lunchTipPoolTotalCalc = lunchTipPoolCalc;
+                //How to get the variable to dynamically update with new info?          
+
 
                 if (string.IsNullOrEmpty(employee))
 
@@ -132,7 +148,7 @@ namespace TipShareV2.Webpages
             }
 
             lblLunchServerError.Text = "";
-            
+                        
             SqlConnection conn = null;
 
                 string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
@@ -166,6 +182,45 @@ namespace TipShareV2.Webpages
                 {
                     conn.Close();
                 }
+
+            //Sum tip pool and set up gridview??
+
+            /*
+
+            SqlConnection conn = null;
+
+            string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            conn = new SqlConnection(connString);
+
+            try
+            {
+
+                var query = String.Format("INSERT INTO [Gratuity] ([GrossSales], [TipsEarned]," +
+                    "[TipPercentAllocated], [TipsAllocated], [EmployeeID], [Shift], " +
+                    "[ShiftDate], [DateCreated], [UserID], [CreatedBy]) " +
+                    "VALUES({0}, {1}, {2}, {3}, {4}, '{5}', '{6}', '{7}', {8}, '{9}')",
+                    grossSales, tipsEarned, tipAllocPercent, tipPoolAlloc, ddlLunchServer.SelectedValue,
+                    "Lunch", cldShiftDate.SelectedDate, DateTime.Now,
+                    int.Parse(Session["userIDCookie"].ToString()), "System");
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+
+                gvLunchTipAlloc.DataBind();
+
+
+            }
+            catch (Exception ex)
+            {
+                // handle error here
+                Response.Write(" Error: " + ex.Message);
+            }
+            finally
+            {
+                conn.Close();
+            }
+            */
 
             //}
             //catch (Exception)
@@ -218,5 +273,5 @@ namespace TipShareV2.Webpages
 
 
 
-    }
+    }    
 }

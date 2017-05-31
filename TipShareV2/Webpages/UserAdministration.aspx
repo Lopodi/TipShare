@@ -13,7 +13,7 @@
             <asp:Button ID="btnLogout" OnClick="btnLogout_Click" Text="Logout" runat="server" />
             <br />
             <asp:GridView ID="gvUserAdmin" runat="server" AllowSorting="True" AutoGenerateColumns="False" 
-                DataKeyNames="UserID,UserPassword" DataSourceID="sdsUserAdmin" 
+                DataKeyNames="UserID,UserPassword,FirstName,LastName,Email," DataSourceID="sdsUserAdmin" 
                 OnSelectedIndexChanged="gvUserAdmin_SelectedIndexChanged">
                 <Columns>
                     <asp:CommandField ShowEditButton="True" />

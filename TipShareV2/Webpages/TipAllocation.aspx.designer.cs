@@ -166,15 +166,6 @@ namespace TipShareV2.Webpages {
         protected global::System.Web.UI.WebControls.Button btnSaveLunch;
         
         /// <summary>
-        /// phNewLunchServer control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.PlaceHolder phNewLunchServer;
-        
-        /// <summary>
         /// gvLunchTipAlloc control.
         /// </summary>
         /// <remarks>
@@ -193,13 +184,13 @@ namespace TipShareV2.Webpages {
         protected global::System.Web.UI.WebControls.Label lblLunchServerError;
         
         /// <summary>
-        /// SqlDsGratuity control.
+        /// sdsGratuity control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.SqlDataSource SqlDsGratuity;
+        protected global::System.Web.UI.WebControls.SqlDataSource sdsGratuity;
         
         /// <summary>
         /// btnAddLunchServer control.

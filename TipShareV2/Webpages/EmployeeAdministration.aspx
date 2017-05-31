@@ -20,13 +20,10 @@
             </div>
             
             <asp:GridView ID="gvEmployee" runat="server" AllowSorting="True" AutoGenerateColumns="False" 
-                OnRowUpdating="gvEmployee_RowUpdating" DataKeyNames="EmployeeID,StatusDate" DataSourceID="sdsEmployee" ShowFooter="True" OnSelectedIndexChanged="gvEmployee_SelectedIndexChanged">
+                OnRowUpdating="gvEmployee_RowUpdating" DataKeyNames="EmployeeID,StatusDate,UserID" DataSourceID="sdsEmployee" ShowFooter="True" OnSelectedIndexChanged="gvEmployee_SelectedIndexChanged">
                 <Columns>
                     <asp:CommandField ShowDeleteButton="True" ShowEditButton="True" />
                     <asp:TemplateField HeaderText="EmployeeID" InsertVisible="False" SortExpression="EmployeeID">
-                        <ItemTemplate>
-                            <asp:Label ID="lblEmployeeID" runat="server" Text='<%# Eval("EmployeeID") %>'></asp:Label>
-                        </ItemTemplate
                         <ItemTemplate>
                             <asp:Label ID="lblEmployeeID" runat="server" Text='<%# Bind("EmployeeID") %>'></asp:Label>
                         </ItemTemplate>

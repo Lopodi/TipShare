@@ -41,7 +41,7 @@ namespace TipShareV2
                 // "SELECT UserID FROM [User] WHERE Email='" + email + "' AND UserPassword ='" + password +"'";
 
                 var query = String.Format("SELECT UserID FROM [User] WHERE Email = '{0}' AND " +
-                    "UserPassword = '{1}'", email, password); 
+                    "UserPassword = '{1}' AND UserStatus = '{2}'", email, password, "Active"); 
 
                 SqlCommand cmd = new SqlCommand(query, conn);
                 conn.Open();
