@@ -15,7 +15,6 @@ namespace TipShareV2.Webpages
     {
 
         public DataSourceOperation UpdateQuery { get; set; }
-
         private SqlConnection conn;
 
         protected void Page_Load(object sender, EventArgs e)
@@ -28,37 +27,41 @@ namespace TipShareV2.Webpages
                 Response.Redirect("Login.aspx");
         }
 
+        
         protected void btnAddEmployee_Click(object sender, EventArgs e)
         {
-            sdsEmployee.InsertParameters["FirstName"].DefaultValue = 
-                ((TextBox)gvEmployee.FooterRow.FindControl("txtFirstName")).Text;
 
-            sdsEmployee.InsertParameters["LastName"].DefaultValue =
-                ((TextBox)gvEmployee.FooterRow.FindControl("txtLastName")).Text;
+            SqlConnection conn = null;
+            string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            conn = new SqlConnection(connString);
 
-            sdsEmployee.InsertParameters["EmployeeStatus"].DefaultValue =
-                ((DropDownList)gvEmployee.FooterRow.FindControl("ddlEmployeeStatus")).SelectedValue;
+            try
+            {
+                var query = String.Format("INSERT INTO [EMPLOYEE] ([StatusDate], [DateCreated], [CreatedBy], " +
+                    "[UserID], [FirstName], [LastName], [EmployeeStatus]) " +
+                    "VALUES('{0}', '{1}', '{2}', {3}, '{4}', '{5}', '{6}')",
+                    DateTime.Now, DateTime.Now, "System", int.Parse(Session["userIDCookie"].ToString()),
+                    txtNewEEFirstName.Text, txtNewEELastName.Text, ddlNewEEStatus.SelectedValue);
 
-            sdsEmployee.Insert();
+                SqlCommand cmd = new SqlCommand(query, conn);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+
+            }
+            catch (Exception ex)
+            {
+                // handle error here
+                Response.Write(" Error: " + ex.Message);
+            }
+            finally
+            {
+                conn.Close();
+            }
+
+            DataTable gridTable = new DataTable();
+            gvEmployee.DataBind();
 
         }
-        
-
-       // SqlConnection conn = null;
-      //  DataTable employee = new DataTable();
-
-
-
-
-
-
-
-
-        //private void btnAddEmployee_Click(object sender, EventArgs e)
-        //{
-        //    sdsEmployee.InsertParameters["LastName"].DefaultValue = GridView.FooterRow.FindControl.
-        //}
-
 
 
         protected void gvEmployee_RowUpdating(object sender, EventArgs e)
@@ -70,7 +73,7 @@ namespace TipShareV2.Webpages
                 string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
                 conn = new SqlConnection(connString);
                 var query = String.Format("UPDATE [Employee] ([LastName], [FirstName], [Status], " +
-                    "[LastUpdatedDate], [LastUpdatedBy], [UserID]) VALUES({0}, '{1}', '{2}', '{3}', '{4}', {5})",
+                    "[LastUpdatedDate], [LastUpdatedBy], [UserID]) VALUES('{0}', '{1}', '{2}', '{3}', '{4}')",
                     gvEmployee, gvEmployee, gvEmployee, DateTime.Now, "System", 
                     int.Parse(Session["userIDCookie"].ToString()));
                 SqlCommand cmd = new SqlCommand(query, conn);

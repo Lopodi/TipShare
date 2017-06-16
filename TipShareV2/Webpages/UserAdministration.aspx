@@ -13,19 +13,20 @@
             <asp:Button ID="btnLogout" OnClick="btnLogout_Click" Text="Logout" runat="server" />
             <br />
             <asp:GridView ID="gvUserAdmin" runat="server" AllowSorting="True" AutoGenerateColumns="False" 
-                DataKeyNames="UserID,UserPassword,FirstName,LastName,Email," DataSourceID="sdsUserAdmin" 
-                OnSelectedIndexChanged="gvUserAdmin_SelectedIndexChanged">
+                DataKeyNames="UserID,FirstName,LastName,Email,UserPassword,UserStatus,StatusDate,DateCreated,CreatedBy" 
+                DataSourceID="sdsUserAdmin">
                 <Columns>
                     <asp:CommandField ShowEditButton="True" />
-                    <asp:BoundField DataField="FirstName" HeaderText="FirstName" SortExpression="FirstName" ReadOnly="True" />
-                    <asp:BoundField DataField="LastName" HeaderText="LastName" SortExpression="LastName" ReadOnly="True" />
-                    <asp:BoundField DataField="Email" HeaderText="Email" SortExpression="Email" ReadOnly="True" />
-                    <asp:TemplateField HeaderText="UserStatus" SortExpression="UserStatus">
+                    <asp:BoundField DataField="UserID" HeaderText="UserID" InsertVisible="False" ReadOnly="True" SortExpression="UserID" Visible="False" />
+                    <asp:BoundField DataField="FirstName" HeaderText="First Name" SortExpression="FirstName" />
+                    <asp:BoundField DataField="LastName" HeaderText="Last Name" SortExpression="LastName" />
+                    <asp:BoundField DataField="Email" HeaderText="Email" SortExpression="Email" />
+                    <asp:TemplateField HeaderText="User Status" SortExpression="UserStatus">
                         <EditItemTemplate>
-                            <asp:DropDownList ID="ddlUserStatus" Text='<%# Bind("UserStatus") %>' runat="server">
-                                <asp:ListItem Text="Select Status" />
-                                <asp:ListItem Text="Active" />
+                            <asp:DropDownList ID="ddlUserStatus" runat="server" 
+                                SelectedValue='<%# Bind("UserStatus") %>'>
                                 <asp:ListItem Text="Pending Approval" />
+                                <asp:ListItem Text="Active" />
                                 <asp:ListItem Text="Inactive" />
                             </asp:DropDownList>
                         </EditItemTemplate>
@@ -33,14 +34,13 @@
                             <asp:Label ID="lblUserStatus" runat="server" Text='<%# Bind("UserStatus") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
-                    <asp:BoundField DataField="StatusDate" HeaderText="StatusDate" SortExpression="StatusDate" ReadOnly="True" />
-                    <asp:BoundField DataField="DateCreated" HeaderText="DateCreated" SortExpression="DateCreated" ReadOnly="True" />
-                    <asp:BoundField DataField="CreatedBy" HeaderText="CreatedBy" SortExpression="CreatedBy" ReadOnly="True" />
-                    <asp:BoundField DataField="LastUpdateDate" HeaderText="LastUpdateDate" SortExpression="LastUpdateDate" ReadOnly="True" />
-                    <asp:BoundField DataField="LastUpdatedBy" HeaderText="LastUpdatedBy" SortExpression="LastUpdatedBy" ReadOnly="True" />
                 </Columns>
             </asp:GridView>
-            <asp:SqlDataSource ID="sdsUserAdmin" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>" DeleteCommand="DELETE FROM [User] WHERE [UserID] = @UserID" InsertCommand="INSERT INTO [User] ([FirstName], [LastName], [Email], [UserPassword], [UserStatus], [StatusDate], [DateCreated], [CreatedBy], [LastUpdateDate], [LastUpdatedBy]) VALUES (@FirstName, @LastName, @Email, @UserPassword, @UserStatus, @StatusDate, @DateCreated, @CreatedBy, @LastUpdateDate, @LastUpdatedBy)" SelectCommand="SELECT * FROM [User]" UpdateCommand="UPDATE [User] SET [FirstName] = @FirstName, [LastName] = @LastName, [Email] = @Email, [UserPassword] = @UserPassword, [UserStatus] = @UserStatus, [StatusDate] = @StatusDate, [DateCreated] = @DateCreated, [CreatedBy] = @CreatedBy, [LastUpdateDate] = @LastUpdateDate, [LastUpdatedBy] = @LastUpdatedBy WHERE [UserID] = @UserID">
+            <asp:SqlDataSource ID="sdsUserAdmin" runat="server" ConnectionString="<%$ ConnectionStrings:ConnectionString %>" 
+                DeleteCommand="DELETE FROM [User] WHERE [UserID] = @UserID" 
+                InsertCommand="INSERT INTO [User] ([FirstName], [LastName], [Email], [UserPassword], [UserStatus], [StatusDate], [DateCreated], [CreatedBy], [LastUpdateDate], [LastUpdatedBy]) VALUES (@FirstName, @LastName, @Email, @UserPassword, @UserStatus, @StatusDate, @DateCreated, @CreatedBy, @LastUpdateDate, @LastUpdatedBy)" 
+                SelectCommand="SELECT * FROM [User]" 
+                UpdateCommand="UPDATE [User] SET [FirstName] = @FirstName, [LastName] = @LastName, [Email] = @Email, [UserPassword] = @UserPassword, [UserStatus] = @UserStatus, [StatusDate] = @StatusDate, [DateCreated] = @DateCreated, [CreatedBy] = @CreatedBy, [LastUpdateDate] = @LastUpdateDate, [LastUpdatedBy] = @LastUpdatedBy WHERE [UserID] = @UserID">
                 <DeleteParameters>
                     <asp:Parameter Name="UserID" Type="Int32" />
                 </DeleteParameters>

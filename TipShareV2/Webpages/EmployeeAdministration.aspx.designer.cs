@@ -40,6 +40,69 @@ namespace TipShareV2.Webpages {
         protected global::System.Web.UI.WebControls.GridView gvEmployee;
         
         /// <summary>
+        /// lblNewEEFirstName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNewEEFirstName;
+        
+        /// <summary>
+        /// txtNewEEFirstName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtNewEEFirstName;
+        
+        /// <summary>
+        /// lblNewEELastName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNewEELastName;
+        
+        /// <summary>
+        /// txtNewEELastName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtNewEELastName;
+        
+        /// <summary>
+        /// lblNewEEStatus control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNewEEStatus;
+        
+        /// <summary>
+        /// ddlNewEEStatus control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlNewEEStatus;
+        
+        /// <summary>
+        /// btnAddNewEE control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnAddNewEE;
+        
+        /// <summary>
         /// sdsEmployee control.
         /// </summary>
         /// <remarks>
