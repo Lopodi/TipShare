@@ -94,7 +94,6 @@
     <Content Include="Webpages\TipAllocation.aspx" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Gratuity.cs" />
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

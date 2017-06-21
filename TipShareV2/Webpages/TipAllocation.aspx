@@ -136,6 +136,8 @@
                     </Columns>
                 </asp:GridView>
                 <asp:Label ID="lblLunchSupportError" runat="server" />
+                <asp:GridView ID="gvLunchSupportTipsEarned" Visible="false" runat="server">
+                </asp:GridView>
             </asp:Panel>
             
                 <br />
@@ -190,7 +192,8 @@
                 <asp:Label ID="lblDinnerTipPoolAllocSum" Text=" " runat="server" />
                                 
 
-                <asp:Button ID="btnSaveDinner" Text="Save" runat="server" OnClick="btnSaveDinner_Click" />
+                <asp:Button ID="btnSaveDinner" Text="Save" runat="server" />
+                    <%-- OnClick="btnSaveDinner_Click --%>
 
                     </asp:Panel>
                 <asp:GridView ID="gvDinnerTipAlloc" runat="server" AllowSorting="True" AutoGenerateColumns="False" 
