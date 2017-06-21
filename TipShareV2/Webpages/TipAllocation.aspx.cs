@@ -505,6 +505,12 @@ namespace TipShareV2.Webpages
 
             try
                 {
+                    
+                    // trying to use a stored procedure -->
+
+                    //SqlCommand cmdTipAllocation = new SqlCommand("spLunchSupportTipsAlloc", connTipsAllocated);
+                    //cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
                     SqlCommand cmdTipAllocation = new SqlCommand(allocateTips, connTipsAllocated);
                     connTipsAllocated.Open();
                     SqlDataReader drHours = cmdTipAllocation.ExecuteReader(CommandBehavior.CloseConnection);
