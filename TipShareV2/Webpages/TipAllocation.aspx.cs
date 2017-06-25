@@ -446,81 +446,36 @@ namespace TipShareV2.Webpages
 
             }
 
-            // Display total hours worked:
-
-            /* SqlConnection connSupportStaffHours = null;
-
-             try
-
-             {
-                 string connStringSupport = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-                 connSupportStaff = new SqlConnection(connStringSupport);
-                 string totalHours = ("SELECT SUM (HoursWorked) AS TotalHours FROM Gratuity " +
-                     "WHERE Shift='Lunch' AND ShiftDate = '" + shiftDate.ToShortDateString() + "'");
-
-             }
-
-                 // bind the appropriate SQL results to your gridview control 
-
-                 //  gvLunchSupportAlloc.DataSource = gridTableSupportStaff;
-                 //  gvLunchSupportAlloc.DataBind();
-
-
-                 //    lblLunchServerError.Text = "All fields are required";
-                 //    return;
-
-                 //}
-
-
-     */
         }
 
         protected void btnAllocateTips_Click(object sender, EventArgs e)
 
         {
-
             // define variables
-
-            //string allocateTips;
-           // string totalTipsEarned;
             DateTime shiftDate;
 
-                //initialize variables
+            //initialize variables
+            shiftDate = cldShiftDate.SelectedDate;
 
-                shiftDate = cldShiftDate.SelectedDate;
-               // totalTipsEarned = lblLunchTipPoolTotal.Text;
-               //allocateTips = ("SELECT MAX(e.FirstName) + ' ' + MAX(e.LastName) AS Employee, " +
-               //"SUM (HoursWorked) AS 'Hours Worked',CONVERT(DECIMAL(18, 2), " +
-               //"(SUM(Hoursworked) / (SELECT SUM(HoursWorked) FROM Gratuity WHERE ShiftDate = '" + shiftDate.ToShortDateString() + "') " +
-               //" * (SELECT SUM(TipsAllocated) FROM Gratuity WHERE ShiftDate = '" + shiftDate.ToShortDateString() + "'))) " +
-               //"AS 'Tips Allocated' FROM Gratuity g INNER JOIN Employee e ON g.EmployeeID = e.EmployeeID " +
-               //"WHERE HoursWorked IS NOT NULL AND ShiftDate = '" + shiftDate.ToShortDateString() + "'" +
-               //"GROUP BY e.EmployeeID");
-
-                SqlConnection connTipsAllocated = null;
-                string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            SqlConnection connTipsAllocated = null;
+            string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             using (connTipsAllocated = new SqlConnection(connString))
             {
 
-
-
                 DataTable gridTableSupportStaff = new DataTable();
 
-                // try
-                //{ 
-
-                // trying to use a stored procedure -->
-
+                //stored procedure
                 SqlCommand cmdTipAllocation = new SqlCommand("spSupportTipsAllocation", connTipsAllocated);
                 cmdTipAllocation.CommandType = CommandType.StoredProcedure;
 
-                SqlParameter shiftDateParameter = new SqlParameter("@ShiftDate", shiftDate.ToShortDateString());
-                cmdTipAllocation.Parameters.Add(shiftDateParameter);
+                SqlParameter shiftDateBeginParameter = new SqlParameter("@ShiftDateBegin", shiftDate.ToShortDateString());
+                cmdTipAllocation.Parameters.Add(shiftDateBeginParameter);
+
+                SqlParameter shiftDateEndParameter = new SqlParameter("@ShiftDateEnd", shiftDate.ToShortDateString());
+                cmdTipAllocation.Parameters.Add(shiftDateEndParameter);
 
                 SqlParameter shiftParameter = new SqlParameter("@Shift", "Lunch");
                 cmdTipAllocation.Parameters.Add(shiftParameter);
-
-                // NOT STORED PROCEDURE -->  SqlCommand cmdTipAllocation = new SqlCommand(allocateTips, connTipsAllocated);
 
                 try
                 {
@@ -528,9 +483,7 @@ namespace TipShareV2.Webpages
                     SqlDataReader drHours = cmdTipAllocation.ExecuteReader(CommandBehavior.CloseConnection);
                     gridTableSupportStaff.Load(drHours);
                 }
-                // above, the data is pulling in the rows and columns as identifed in the sqldatareader and load 
-                // command in 'try'
-                // }
+                // above, data is pulling in the rows and columns as identifed in the sqldatareader and loading comand in "try"
 
                 catch (Exception ex)
 
