@@ -81,10 +81,7 @@ namespace TipShareV2.Webpages
 
             }
 
-
-
             lblLunchServerError.Text = "";
-
 
 
             SqlConnection conn = null;
