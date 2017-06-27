@@ -12,10 +12,12 @@ namespace TipShareV2.Webpages
 {
     public partial class TipAllocation : System.Web.UI.Page
     {
-        private SqlCommand cmd;
-        private object gridTable;
 
         public int ConnectionString { get; private set; }
+
+        // set sql connection to be used throughout application -->
+
+        SqlConnection connTipAlloc = null;
 
         //Assign userID upon login -->
 
@@ -48,28 +50,29 @@ namespace TipShareV2.Webpages
             gvLunchSupportAlloc.Visible = false;
             gvLunchSupportTipsEarned.Visible = true;
 
-            SqlConnection conn = null;
-            DataTable gridTable = new DataTable();
+            DataTable dtLunchServers = new DataTable();
+            string connStringServers = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            connTipAlloc = new SqlConnection(connStringServers);
+
+            //stored procedure
+            SqlCommand cmdTipAllocationServer = new SqlCommand("spServerTipsAllocation", connTipAlloc);
+            cmdTipAllocationServer.CommandType = CommandType.StoredProcedure;
+
+            SqlParameter shiftDateBeginServerParameter = new SqlParameter("@ShiftDateBegin", shiftDate.ToShortDateString());
+            cmdTipAllocationServer.Parameters.Add(shiftDateBeginServerParameter);
+
+            SqlParameter shiftDateEndServerParameter = new SqlParameter("@ShiftDateEnd", shiftDate.ToShortDateString());
+            cmdTipAllocationServer.Parameters.Add(shiftDateEndServerParameter);
+
+            SqlParameter shiftServerParameter = new SqlParameter("@Shift", "Lunch");
+            cmdTipAllocationServer.Parameters.Add(shiftServerParameter);
 
             try
 
             {
-                string connStringServers = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-                conn = new SqlConnection(connStringServers);
-                string query = ("SELECT Gratuity.GratuityID, Gratuity.EmployeeID, Gratuity.UserID, " +
-                "Gratuity.GrossSales, Gratuity.TipsEarned, Gratuity.TipsAllocated, " +
-                "Gratuity.TipPercentAllocated, Gratuity.TipPercentContributed, Gratuity.HoursWorked, " +
-                "Gratuity.Shift, Gratuity.ShiftDate, Gratuity.CreatedBy, Gratuity.LastUpdateDate, " +
-                "Gratuity.LastCreatedBy, Employee.FirstName + ' ' + Employee.LastName AS EmployeeName, " +
-                "Gratuity.DateCreated FROM Gratuity INNER JOIN Employee " +
-                "ON Gratuity.EmployeeID = Employee.EmployeeID " +
-                "WHERE Gratuity.GrossSales IS NOT NULL AND " +
-                "Gratuity.ShiftDate ='" + shiftDate.ToShortDateString() + "'");
-
-                SqlCommand cmd = new SqlCommand(query, conn);
-                conn.Open();
-                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-                gridTable.Load(dr);
+                connTipAlloc.Open();
+                SqlDataReader drServerTipsAllocation = cmdTipAllocationServer.ExecuteReader(CommandBehavior.CloseConnection);
+                dtLunchServers.Load(drServerTipsAllocation);
             }
 
             catch (Exception ex)
@@ -80,13 +83,13 @@ namespace TipShareV2.Webpages
 
             finally
             {
-                conn.Close();
+                connTipAlloc.Close();
 
             }
 
-            // bind the appropriate SQL results to your gridview control 
+            // bind the appropriate SQL results to your gridview control -->
 
-            gvLunchTipAlloc.DataSource = gridTable;
+            gvLunchTipAlloc.DataSource = dtLunchServers;
             gvLunchTipAlloc.DataBind();
 
             //Step 1.1 --> select shift date for which to enter gross sales and gratuities & display existings 
@@ -94,15 +97,15 @@ namespace TipShareV2.Webpages
 
             gvLunchSupportAlloc.Visible = true;
 
-            SqlConnection connTipsAllocated = null;
+            //SqlConnection connTipsAllocated = null;
             string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-            using (connTipsAllocated = new SqlConnection(connString))
+            using (connTipAlloc = new SqlConnection(connString))
             {
 
                 DataTable gridTableSupportStaff = new DataTable();
 
                 //stored procedure
-                SqlCommand cmdTipAllocation = new SqlCommand("spSupportTipsAllocation", connTipsAllocated);
+                SqlCommand cmdTipAllocation = new SqlCommand("spSupportTipsAllocation", connTipAlloc);
                 cmdTipAllocation.CommandType = CommandType.StoredProcedure;
 
                 SqlParameter shiftDateBeginParameter = new SqlParameter("@ShiftDateBegin", shiftDate.ToShortDateString());
@@ -114,32 +117,14 @@ namespace TipShareV2.Webpages
                 SqlParameter shiftParameter = new SqlParameter("@Shift", "Lunch");
                 cmdTipAllocation.Parameters.Add(shiftParameter);
 
-                //OLD SqlConnection connSupportStaff = null;
-               // OLD  DataTable gridTableSupportStaff = new DataTable();
-
                 try
 
                 {
 
-                    connTipsAllocated.Open();
-                    SqlDataReader drHours = cmdTipAllocation.ExecuteReader(CommandBehavior.CloseConnection);
-                    gridTableSupportStaff.Load(drHours);
+                    connTipAlloc.Open();
+                    SqlDataReader drTipsAlloc = cmdTipAllocation.ExecuteReader(CommandBehavior.CloseConnection);
+                    gridTableSupportStaff.Load(drTipsAlloc);
 
-                    //without stored procedure -->
-                    //string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-                    //connSupportStaff = new SqlConnection(connString);
-                    //string query = ("SELECT Gratuity.GratuityID, Gratuity.EmployeeID, Gratuity.UserID, " +
-                    //"Gratuity.HoursWorked, Gratuity.TipsEarnedSupport," +
-                    //"Employee.FirstName + ' ' + Employee.LastName AS EmployeeName, " +
-                    //"Gratuity.DateCreated FROM Gratuity INNER JOIN Employee " +
-                    //"ON Gratuity.EmployeeID = Employee.EmployeeID " +
-                    //"WHERE Gratuity.HoursWorked IS NOT NULL AND " +
-                    //"Gratuity.ShiftDate ='" + shiftDate.ToShortDateString() + "'");
-
-                    //SqlCommand cmd = new SqlCommand(query, conn);
-                    //conn.Open();
-                    //SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-                    //gridTableSupportStaff.Load(dr);
                 }
 
                 catch (Exception ex)
@@ -150,26 +135,22 @@ namespace TipShareV2.Webpages
 
                 finally
                 {
-                    conn.Close();
+                    connTipAlloc.Close();
 
                 }
 
-                //bind appropriate SQL results to gridview control
+                //bind appropriate SQL results to gridview control -->
 
                 gvLunchSupportTipsEarned.DataSource = gridTableSupportStaff;
                 gvLunchSupportTipsEarned.DataBind();
                 gvLunchSupportAlloc.Visible = false;
                 gvLunchSupportTipsEarned.Visible = true;
 
-                // bind the appropriate SQL results to your gridview control 
-
-             // OLD   gvLunchSupportAlloc.DataSource = gridTableSupportStaff;
-             // OLD   gvLunchSupportAlloc.DataBind();
-
             }
             //Sum tip pool and dipslay for selected date -->
 
             SqlCommand cmdTipPool;
+            connTipAlloc = new SqlConnection(connString);
 
             string lunchTipPoolTotal = lblLunchTipPoolTotalCalc.Text;
 
@@ -179,8 +160,8 @@ namespace TipShareV2.Webpages
             try
             {
 
-                cmdTipPool = new SqlCommand(tipPoolTotal, conn);
-                conn.Open();
+                cmdTipPool = new SqlCommand(tipPoolTotal, connTipAlloc);
+                connTipAlloc.Open();
                 Int32 tipPool = Convert.ToInt32(cmdTipPool.ExecuteScalar());
                 cmdTipPool.Dispose();
                 lblLunchTipPoolTotalCalc.Text = tipPool.ToString("C");
@@ -194,7 +175,7 @@ namespace TipShareV2.Webpages
 
             finally
             {
-                conn.Close();
+                connTipAlloc.Close();
 
             }
 
@@ -213,13 +194,8 @@ namespace TipShareV2.Webpages
 
             DateTime shiftDate;
             string employee;
-            double grossSales;
-            double tipAllocPercent;
-            double tipsEarned;
-            double tipPoolAlloc;
-            string lunchTipPoolCalc;
-            string lunchTipPoolTotal;
-
+            double grossSales, tipAllocPercent, tipsEarned, tipPoolAlloc;
+            string lunchTipPoolCalc, lunchTipPoolTotal;
 
             try
             {
@@ -259,25 +235,59 @@ namespace TipShareV2.Webpages
 
             //insert new row into Tipshare database
 
-            SqlConnection conn = null;
+           // SqlConnection conn = null;
 
             string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-            conn = new SqlConnection(connString);
+            connTipAlloc = new SqlConnection(connString);
 
             try
             {
+                //stored procedure -->
+                SqlCommand cmdInsertServerRecord = new SqlCommand("spInsertServerRecord", connTipAlloc);
+                cmdInsertServerRecord.CommandType = CommandType.StoredProcedure;
 
-                var query = String.Format("INSERT INTO [Gratuity] ([GrossSales], [TipsEarned]," +
-                    "[TipPercentAllocated], [TipsAllocated], [EmployeeID], [Shift], " +
-                    "[ShiftDate], [DateCreated], [UserID], [CreatedBy]) " +
-                    "VALUES({0}, {1}, {2}, {3}, {4}, '{5}', '{6}', '{7}', {8}, '{9}')",
-                    grossSales, tipsEarned, tipAllocPercent, tipPoolAlloc, ddlLunchServer.SelectedValue,
-                    "Lunch", cldShiftDate.SelectedDate, DateTime.Now,
-                    int.Parse(Session["userIDCookie"].ToString()), "System");
+                SqlParameter GrossSalesParameter = new SqlParameter("@GrossSales", grossSales);
+                cmdInsertServerRecord.Parameters.Add(GrossSalesParameter);
 
-                SqlCommand cmd = new SqlCommand(query, conn);
-                conn.Open();
-                cmd.ExecuteNonQuery();
+                SqlParameter TipsEarnedParameter = new SqlParameter("@TipsEarned", tipsEarned);
+                cmdInsertServerRecord.Parameters.Add(TipsEarnedParameter);
+
+                SqlParameter TipsAllocPercentParamter = new SqlParameter("@TipsAllocPercent", tipAllocPercent);
+                cmdInsertServerRecord.Parameters.Add(TipsAllocPercentParamter);
+
+                SqlParameter TipPoolAllocParameter = new SqlParameter("@TipPoolAlloc", tipPoolAlloc);
+                cmdInsertServerRecord.Parameters.Add(TipPoolAllocParameter);
+
+                SqlParameter EmployeeParamter = new SqlParameter("@Employee", ddlLunchServer.SelectedValue);
+                cmdInsertServerRecord.Parameters.Add(EmployeeParamter);
+
+                SqlParameter ShiftParameter = new SqlParameter("@Shift", "Lunch");
+                cmdInsertServerRecord.Parameters.Add(ShiftParameter);
+
+                SqlParameter ShiftDateParameter = new SqlParameter("@ShiftDate", cldShiftDate.SelectedDate);
+                cmdInsertServerRecord.Parameters.Add(ShiftDateParameter);
+
+                SqlParameter DateCreatedParameter = new SqlParameter("@DateCreated", DateTime.Now);
+                cmdInsertServerRecord.Parameters.Add(DateCreatedParameter);
+
+                SqlParameter UserCreatedParameter = new SqlParameter
+                    ("@UserID", int.Parse(Session["userIDCookie"].ToString()));
+                cmdInsertServerRecord.Parameters.Add(UserCreatedParameter);
+
+                SqlParameter CreatedByParameter = new SqlParameter ("@CreatedBy", "System");
+                cmdInsertServerRecord.Parameters.Add(CreatedByParameter);
+
+                //var query = String.Format("INSERT INTO [Gratuity] ([GrossSales], [TipsEarned]," +
+                //    "[TipPercentAllocated], [TipsAllocated], [EmployeeID], [Shift], " +
+                //    "[ShiftDate], [DateCreated], [UserID], [CreatedBy]) " +
+                //    "VALUES({0}, {1}, {2}, {3}, {4}, '{5}', '{6}', '{7}', {8}, '{9}')",
+                //    grossSales, tipsEarned, tipAllocPercent, tipPoolAlloc, ddlLunchServer.SelectedValue,
+                //    "Lunch", cldShiftDate.SelectedDate, DateTime.Now,
+                //    int.Parse(Session["userIDCookie"].ToString()), "System");
+
+                //SqlCommand cmd = new SqlCommand(query, connTipAlloc);
+                connTipAlloc.Open();
+                cmdInsertServerRecord.ExecuteNonQuery();
             }
             catch (Exception ex)
 
@@ -287,7 +297,7 @@ namespace TipShareV2.Webpages
 
             finally
             {
-                conn.Close();
+                connTipAlloc.Close();
 
             }
 
@@ -298,23 +308,29 @@ namespace TipShareV2.Webpages
 
             // continue to display gridview for the selected date, appended for new row -->
 
+            DataTable dtLunchServers = new DataTable();
+            string connStringServers = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            connTipAlloc = new SqlConnection(connStringServers);
+
+            //stored procedure -->
+            SqlCommand cmdTipAllocationServer = new SqlCommand("spServerTipsAllocation", connTipAlloc);
+            cmdTipAllocationServer.CommandType = CommandType.StoredProcedure;
+
+            SqlParameter shiftDateBeginServerParameter = new SqlParameter("@ShiftDateBegin", shiftDate.ToShortDateString());
+            cmdTipAllocationServer.Parameters.Add(shiftDateBeginServerParameter);
+
+            SqlParameter shiftDateEndServerParameter = new SqlParameter("@ShiftDateEnd", shiftDate.ToShortDateString());
+            cmdTipAllocationServer.Parameters.Add(shiftDateEndServerParameter);
+
+            SqlParameter shiftServerParameter = new SqlParameter("@Shift", "Lunch");
+            cmdTipAllocationServer.Parameters.Add(shiftServerParameter);
+
             try
+
             {
-
-                string display = ("SELECT Gratuity.GratuityID, Gratuity.EmployeeID, Gratuity.UserID, " +
-                    "Gratuity.GrossSales, Gratuity.TipsEarned, Gratuity.TipsAllocated, " +
-                    "Gratuity.TipPercentAllocated, Gratuity.TipPercentContributed, Gratuity.HoursWorked, " +
-                    "Gratuity.Shift, Gratuity.ShiftDate, Gratuity.CreatedBy, Gratuity.LastUpdateDate, " +
-                    "Gratuity.LastCreatedBy, Employee.FirstName + ' ' + Employee.LastName AS EmployeeName, " +
-                    "Gratuity.DateCreated FROM Gratuity INNER JOIN Employee " +
-                    "ON Gratuity.EmployeeID = Employee.EmployeeID " +
-                    "WHERE Gratuity.GrossSales IS NOT NULL AND " +
-                    "Gratuity.ShiftDate ='" + shiftDate.ToShortDateString() + "'");
-
-                SqlCommand cmdDisplay = new SqlCommand(display, conn);
-                conn.Open();
-                SqlDataReader dr = cmdDisplay.ExecuteReader(CommandBehavior.CloseConnection);
-                gridTable.Load(dr);
+                connTipAlloc.Open();
+                SqlDataReader drServerTipsAllocation = cmdTipAllocationServer.ExecuteReader(CommandBehavior.CloseConnection);
+                dtLunchServers.Load(drServerTipsAllocation);
             }
 
             catch (Exception ex)
@@ -325,12 +341,13 @@ namespace TipShareV2.Webpages
 
             finally
             {
-                conn.Close();
+                connTipAlloc.Close();
 
             }
-            // bind the appropriate SQL results to your gridview control 
 
-            gvLunchTipAlloc.DataSource = gridTable;
+            // bind the appropriate SQL results to your gridview control -->
+
+            gvLunchTipAlloc.DataSource = dtLunchServers;
             gvLunchTipAlloc.DataBind();
 
             //Sum tip pool and set up gridview -->
@@ -344,8 +361,8 @@ namespace TipShareV2.Webpages
 
             try
             {
-                cmdTipPool = new SqlCommand(tipPoolTotal, conn);
-                conn.Open();
+                cmdTipPool = new SqlCommand(tipPoolTotal, connTipAlloc);
+                connTipAlloc.Open();
                 Int32 tipPool = Convert.ToInt32(cmdTipPool.ExecuteScalar());
                 cmdTipPool.Dispose();
                 lblLunchTipPoolTotalCalc.Text = tipPool.ToString("C");
@@ -359,7 +376,7 @@ namespace TipShareV2.Webpages
 
             finally
             {
-                conn.Close();
+                connTipAlloc.Close();
 
             }
 
@@ -411,75 +428,85 @@ namespace TipShareV2.Webpages
 
             //insert new row into Tipshare database for hours worked by support staff -->
 
-            SqlConnection conn = null;
+            //SqlConnection conn = null;
 
             string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-            conn = new SqlConnection(connString);
+            connTipAlloc = new SqlConnection(connString);
 
-            try
-            {
-
-                var query = String.Format("INSERT INTO [Gratuity] ([EmployeeID], [Shift], " +
+            var query = String.Format("INSERT INTO [Gratuity] ([EmployeeID], [Shift], " +
                     "[ShiftDate], [HoursWorked], [DateCreated], [UserID], [CreatedBy]) " +
                     "VALUES({0}, '{1}', '{2}', {3}, '{4}', {5}, '{6}')",
                     ddlLunchSupport.SelectedValue, "Lunch", cldShiftDate.SelectedDate, hours, DateTime.Now,
                     int.Parse(Session["userIDCookie"].ToString()), "System");
 
-                SqlCommand cmd = new SqlCommand(query, conn);
-                conn.Open();
-                cmd.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-
+            using (SqlCommand cmd = new SqlCommand(query, connTipAlloc))
             {
-                Response.Write("Error occured" + ex.Message);
+
+                try
+                {
+
+                    connTipAlloc.Open();
+                    cmd.ExecuteNonQuery();
+                }
+
+                catch (Exception ex)
+
+                {
+                    Response.Write("Error occured" + ex.Message);
+                }
+
+                finally
+                {
+                    connTipAlloc.Close();
+
+                }
+
+                DataTable gridTableSupportStaff = new DataTable();
+                gvLunchSupportAlloc.DataSource = gridTableSupportStaff;
+                gvLunchSupportAlloc.DataBind();
+
+                // display support gridview after saved -->
+
+                SqlConnection connSupportStaff = null;
+
+
+                try
+
+                {
+                    string connStringSupport = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+                    connSupportStaff = new SqlConnection(connStringSupport);
+                    string displayServers= ("SELECT Gratuity.GratuityID, Gratuity.EmployeeID, Gratuity.UserID, " +
+                    "Gratuity.HoursWorked, Gratuity.TipsEarnedSupport," +
+                    "Employee.FirstName + ' ' + Employee.LastName AS EmployeeName, " +
+                    "Gratuity.DateCreated FROM Gratuity INNER JOIN Employee " +
+                    "ON Gratuity.EmployeeID = Employee.EmployeeID " +
+                    "WHERE Gratuity.HoursWorked IS NOT NULL AND " +
+                    "Gratuity.ShiftDate ='" + shiftDate.ToShortDateString() + "'");
+
+                    SqlCommand cmdServers = new SqlCommand(displayServers, connTipAlloc);
+                    connTipAlloc.Open();
+                    lblLunchSupportTipAlloc.Text = Convert.ToString(cmd.ExecuteReader(CommandBehavior.CloseConnection));
+                    SqlDataReader drHours = cmdServers.ExecuteReader(CommandBehavior.CloseConnection);
+                    gridTableSupportStaff.Load(drHours);
+                }
+
+                catch (Exception ex)
+
+                {
+                    Response.Write("Error occured" + ex.Message);
+                }
+
+                finally
+                {
+                    connTipAlloc.Close();
+
+                }
+
+                gvLunchSupportAlloc.DataSource = gridTableSupportStaff;
+                gvLunchSupportAlloc.DataBind();
+                gvLunchSupportAlloc.Visible = true;
+                gvLunchSupportTipsEarned.Visible = false;
             }
-
-            finally
-            {
-                conn.Close();
-
-            }
-
-            DataTable gridTableSupportStaff = new DataTable();
-            gvLunchSupportAlloc.DataSource = gridTableSupportStaff;
-            gvLunchSupportAlloc.DataBind();
-
-            // display support gridview after saved -->
-
-            SqlConnection connSupportStaff = null;
-
-            try
-
-            {
-                string connStringSupport = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-                connSupportStaff = new SqlConnection(connStringSupport);
-                string query = ("SELECT Gratuity.GratuityID, Gratuity.EmployeeID, Gratuity.UserID, " +
-                "Gratuity.HoursWorked, Gratuity.TipsEarnedSupport," +
-                "Employee.FirstName + ' ' + Employee.LastName AS EmployeeName, " +
-                "Gratuity.DateCreated FROM Gratuity INNER JOIN Employee " +
-                "ON Gratuity.EmployeeID = Employee.EmployeeID " +
-                "WHERE Gratuity.HoursWorked IS NOT NULL AND " +
-                "Gratuity.ShiftDate ='" + shiftDate.ToShortDateString() + "'");
-
-                SqlCommand cmd = new SqlCommand(query, conn);
-                conn.Open();
-                lblLunchSupportTipAlloc.Text = Convert.ToString(cmd.ExecuteReader(CommandBehavior.CloseConnection));
-                //gridTableSupportStaff.Load(dr);
-            }
-
-            catch (Exception ex)
-
-            {
-                Response.Write("Error occured" + ex.Message);
-            }
-
-            finally
-            {
-                conn.Close();
-
-            }
-
         }
 
         protected void btnAllocateTips_Click(object sender, EventArgs e)
@@ -491,15 +518,15 @@ namespace TipShareV2.Webpages
             //initialize variables
             shiftDate = cldShiftDate.SelectedDate;
 
-            SqlConnection connTipsAllocated = null;
+            //SqlConnection connTipsAllocated = null;
             string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-            using (connTipsAllocated = new SqlConnection(connString))
+            using (connTipAlloc = new SqlConnection(connString))
             {
 
                 DataTable gridTableSupportStaff = new DataTable();
 
                 //stored procedure
-                SqlCommand cmdTipAllocation = new SqlCommand("spSupportTipsAllocation", connTipsAllocated);
+                SqlCommand cmdTipAllocation = new SqlCommand("spSupportTipsAllocation", connTipAlloc);
                 cmdTipAllocation.CommandType = CommandType.StoredProcedure;
 
                 SqlParameter shiftDateBeginParameter = new SqlParameter("@ShiftDateBegin", shiftDate.ToShortDateString());
@@ -513,7 +540,7 @@ namespace TipShareV2.Webpages
 
                 try
                 {
-                    connTipsAllocated.Open();
+                    connTipAlloc.Open();
                     SqlDataReader drHours = cmdTipAllocation.ExecuteReader(CommandBehavior.CloseConnection);
                     gridTableSupportStaff.Load(drHours);
                 }
@@ -527,7 +554,7 @@ namespace TipShareV2.Webpages
 
                 finally
                 {
-                    connTipsAllocated.Close();
+                    connTipAlloc.Close();
 
                 }
 
@@ -537,50 +564,7 @@ namespace TipShareV2.Webpages
                 gvLunchSupportTipsEarned.Visible = true;
             }
 
-            //Continue to display support staff after tip allocation processed -->
-
-
-            //SqlConnection connSupportStaff = null;
-            //DataTable gridTableSupportStaff = new DataTable();
-
-            /*
-            try
-
-            {
-                string connSupportStaffdisp = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
-                connSupportStaff = new SqlConnection(connString);
-                string query = ("SELECT Gratuity.GratuityID, Gratuity.EmployeeID, Gratuity.UserID, " +
-                "Gratuity.HoursWorked, Gratuity.TipsEarnedSupport," +
-                "Employee.FirstName + ' ' + Employee.LastName AS EmployeeName, " +
-                "Gratuity.DateCreated FROM Gratuity INNER JOIN Employee " +
-                "ON Gratuity.EmployeeID = Employee.EmployeeID " +
-                "WHERE Gratuity.HoursWorked IS NOT NULL AND " +
-                "Gratuity.ShiftDate ='" + shiftDate.ToShortDateString() + "'");
-
-                SqlCommand cmd = new SqlCommand(query, connSupportStaff);
-                connSupportStaff.Open();
-                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-                gridTableSupportStaff.Load(dr);
-            }
-
-            catch (Exception ex)
-
-            {
-                Response.Write("Error occured" + ex.Message);
-            }
-
-            finally
-            {
-                connSupportStaff.Close();
-
-            }
-
-            // bind the appropriate SQL results to your gridview control 
-
-            gvLunchSupportAlloc.DataSource = gridTableSupportStaff;
-            gvLunchSupportAlloc.DataBind();
-
-            */
+          
         }
     }
         
