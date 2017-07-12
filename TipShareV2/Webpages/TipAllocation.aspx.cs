@@ -16,7 +16,7 @@ namespace TipShareV2.Webpages
         public int ConnectionString { get; private set; }
         
 
-        // set sql connection to be used throughout application -->
+// set sql connection to be used throughout application -->
 
         SqlConnection connTipAlloc = null;
 
@@ -40,8 +40,8 @@ namespace TipShareV2.Webpages
             Response.Redirect("Login.aspx");
         }
 
-        //Step 1 --> select shift date for which to enter gross sales and gratuities & display existings 
-        //results for that day -->
+//Step 1 --> select shift date for which to enter gross sales and gratuities & display existings 
+//results for that day -->
 
         protected void cldShiftDate_SelectionChanged(object sender, EventArgs e)
         {
@@ -526,8 +526,6 @@ namespace TipShareV2.Webpages
 
  //insert new row into Tipshare database for hours worked by lunch support staff -->
 
-            //SqlConnection conn = null;
-
             string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             connTipAlloc = new SqlConnection(connString);
 
@@ -538,9 +536,6 @@ namespace TipShareV2.Webpages
                     int.Parse(Session["userIDCookie"].ToString()), "System");
 
             SqlCommand cmdInsertHours = new SqlCommand(query, connTipAlloc);
-
-            // using (SqlCommand cmd = new SqlCommand(query, connTipAlloc))
-            // {
 
             try
             {
@@ -566,8 +561,6 @@ namespace TipShareV2.Webpages
 
 // display support gridview after saved -->
 
-            //SqlConnection connSupportStaff = null;
-
             DataTable dtLunchSupportStaff = new DataTable();
             string connStringSupport = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             connTipAlloc = new SqlConnection(connStringSupport);
@@ -589,10 +582,7 @@ namespace TipShareV2.Webpages
             {
                 connTipAlloc.Open();
                 SqlDataReader drHours = cmdLunchSupportTipAllocation.ExecuteReader(CommandBehavior.CloseConnection);
-                dtLunchSupportStaff.Load(drHours);
-
-                //lblLunchSupportTipCalc.Text = Convert.ToString(cmdSupportHours.ExecuteReader(CommandBehavior.CloseConnection));
-
+                dtLunchSupportStaff.Load(drHours);          
             }
 
             catch (Exception ex)
@@ -611,10 +601,12 @@ namespace TipShareV2.Webpages
             gvLunchSupportTipsEarned.DataBind();
             gvLunchSupportTipsEarned.Visible = true;
             gvLunchSupportAlloc.Visible = false;
-            //}
         }
 
-        protected void btnAllocateTips_Click(object sender, EventArgs e)
+// btnAllocateLunchTips is needed in case a server is added after tips have already been allocated. 
+//It will recalculate tip allocation for addition of new server -->
+
+        protected void btnAllocateLunchTips_Click(object sender, EventArgs e)
         {
             // define variables
             DateTime shiftDate;
@@ -622,7 +614,6 @@ namespace TipShareV2.Webpages
             //initialize variables
             shiftDate = cldShiftDate.SelectedDate;
 
-            //SqlConnection connTipsAllocated = null;
             string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             using (connTipAlloc = new SqlConnection(connString))
             {
@@ -670,7 +661,7 @@ namespace TipShareV2.Webpages
             }
 
         }
-//Insert dinner server into database -->
+        //Insert dinner server into database -->
 
         protected void btnSaveDinner_Click(object sender, EventArgs e)
         {
@@ -722,8 +713,6 @@ namespace TipShareV2.Webpages
             lblDinnerServerError.Text = "";
 
 //insert new row into Tipshare database for dinner shift -->
-
-            // SqlConnection conn = null;
 
             string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             connTipAlloc = new SqlConnection(connString);
@@ -822,7 +811,7 @@ namespace TipShareV2.Webpages
 
             }
 
-            // bind the appropriate SQL results to your gridview control -->
+            // bind the appropriate SQL results to the gridview control -->
 
             gvDinnerTipAlloc.DataSource = dtDinnerServers;
             gvDinnerTipAlloc.DataBind();
@@ -854,6 +843,188 @@ namespace TipShareV2.Webpages
             finally
             {
                 connTipAlloc.Close();
+
+            }
+
+        }
+
+//Step 2 --> assign hours to dinner support staff
+
+        protected void btnSaveDinnerHours_Click (object sender, EventArgs e)
+        {
+            //double.TryParse --> will try to convert to a number, but if it fails, it would do something
+            //else (define)
+
+            //defining variables outside of try block, so they can be viewed and called elsewhere 
+            //in this method
+
+            DateTime shiftDate;
+            string employee;
+            double hours;
+
+            try
+            {
+                //above, we are defining the variables. here, we are initializing them
+
+                shiftDate = cldShiftDate.SelectedDate;
+                employee = ddlDinnerSupportStaff.Text;
+                hours = double.Parse(txtDinnerHoursWorked.Text);
+
+                if (string.IsNullOrEmpty(employee))
+
+                //check for null or empty employee only on if statement b/c it is only variable above
+                //that does not try to perform an action (convert, calculate). Cannot take action on a 
+                //null field and will "automatically" error out 
+
+                {
+                    //CHANGE TO DINNER SUPPORT ERROR! lblLunchServerError.Text = "All fields are required";
+                    return;
+                }
+
+            }
+            catch (Exception)
+            {
+
+                //CHANGE TO DINNER SUPPORT ERROR! lblLunchServerError.Text = "All fields are required";
+                return;
+
+            }
+
+            //CHANGE TO DINNER SUPPORT ERROR!lblLunchServerError.Text = "";
+
+            //insert new row into Tipshare database for hours worked by dinner support staff -->
+
+            string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            connTipAlloc = new SqlConnection(connString);
+
+            var query = String.Format("INSERT INTO [Gratuity] ([EmployeeID], [Shift], " +
+                    "[ShiftDate], [HoursWorked], [DateCreated], [UserID], [CreatedBy]) " +
+                    "VALUES({0}, '{1}', '{2}', {3}, '{4}', {5}, '{6}')",
+                    ddlDinnerSupportStaff.SelectedValue, "Dinner", cldShiftDate.SelectedDate, hours, DateTime.Now,
+                    int.Parse(Session["userIDCookie"].ToString()), "System");
+
+            SqlCommand cmdInsertHours = new SqlCommand(query, connTipAlloc);
+
+            try
+            {
+                connTipAlloc.Open();
+                cmdInsertHours.ExecuteNonQuery();
+            }
+
+            catch (Exception ex)
+
+            {
+                Response.Write("Error occured" + ex.Message);
+            }
+
+            finally
+            {
+                connTipAlloc.Close();
+
+            }
+
+            DataTable gridTableSupportStaff = new DataTable();
+            gvDinnerSupportAlloc.DataSource = gridTableSupportStaff;
+            gvDinnerSupportAlloc.DataBind();
+
+            // display support gridview after saved -->
+
+            DataTable dtDinnerSupportStaff = new DataTable();
+            string connStringSupport = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            connTipAlloc = new SqlConnection(connStringSupport);
+
+            SqlCommand cmdDinnerSupportTipAllocation = new SqlCommand("spSupportTipsAllocation", connTipAlloc);
+            cmdDinnerSupportTipAllocation.CommandType = CommandType.StoredProcedure;
+
+            SqlParameter shiftDinnerDateBeginSupportParameter = new SqlParameter("@ShiftDateBegin", shiftDate.ToShortDateString());
+            cmdDinnerSupportTipAllocation.Parameters.Add(shiftDinnerDateBeginSupportParameter);
+
+            SqlParameter shiftDinnerDateEndSupportParameter = new SqlParameter("@ShiftDateEnd", shiftDate.ToShortDateString());
+            cmdDinnerSupportTipAllocation.Parameters.Add(shiftDinnerDateEndSupportParameter);
+
+            SqlParameter shiftDinnerSupportParameter = new SqlParameter("@Shift", "Dinner");
+            cmdDinnerSupportTipAllocation.Parameters.Add(shiftDinnerSupportParameter);
+
+            try
+
+            {
+                connTipAlloc.Open();
+                SqlDataReader drHours = cmdDinnerSupportTipAllocation.ExecuteReader(CommandBehavior.CloseConnection);
+                dtDinnerSupportStaff.Load(drHours);
+            }
+
+            catch (Exception ex)
+
+            {
+                Response.Write("Error occured" + ex.Message);
+            }
+
+            finally
+            {
+                connTipAlloc.Close();
+
+            }
+
+            gvDinnerSupportTipsEarned.DataSource = dtDinnerSupportStaff;
+            gvDinnerSupportTipsEarned.DataBind();
+            gvDinnerSupportTipsEarned.Visible = true;
+            gvDinnerSupportAlloc.Visible = false;
+        }
+
+        // btnAllocateLunchTips is needed in case a server is added after tips have already been allocated. 
+        //It will recalculate tip allocation for addition of new server -->
+
+        protected void btnDinnerAllocTips_Click (object sender, EventArgs e)
+        {
+            // define variables
+            DateTime shiftDate;
+
+            //initialize variables
+            shiftDate = cldShiftDate.SelectedDate;
+
+            string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            using (connTipAlloc = new SqlConnection(connString))
+            {
+
+                DataTable gridTableSupportStaff = new DataTable();
+
+                //stored procedure
+                SqlCommand cmdTipAllocation = new SqlCommand("spSupportTipsAllocation", connTipAlloc);
+                cmdTipAllocation.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter shiftDateBeginParameter = new SqlParameter("@ShiftDateBegin", shiftDate.ToShortDateString());
+                cmdTipAllocation.Parameters.Add(shiftDateBeginParameter);
+
+                SqlParameter shiftDateEndParameter = new SqlParameter("@ShiftDateEnd", shiftDate.ToShortDateString());
+                cmdTipAllocation.Parameters.Add(shiftDateEndParameter);
+
+                SqlParameter shiftParameter = new SqlParameter("@Shift", "Dinner");
+                cmdTipAllocation.Parameters.Add(shiftParameter);
+
+                try
+                {
+                    connTipAlloc.Open();
+                    SqlDataReader drHours = cmdTipAllocation.ExecuteReader(CommandBehavior.CloseConnection);
+                    gridTableSupportStaff.Load(drHours);
+                }
+                // above, data is pulling in the rows and columns as identifed in the sqldatareader and loading comand in "try"
+
+                catch (Exception ex)
+
+                {
+                    Response.Write("Error occured" + ex.Message);
+                }
+
+                finally
+                {
+                    connTipAlloc.Close();
+
+                }
+
+                gvDinnerSupportTipsEarned.DataSource = gridTableSupportStaff;
+                gvDinnerSupportTipsEarned.DataBind();
+                gvDinnerSupportAlloc.Visible = false;
+                gvDinnerSupportTipsEarned.Visible = true;
 
             }
 

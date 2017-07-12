@@ -319,24 +319,6 @@ namespace TipShareV2.Webpages {
         protected global::System.Web.UI.WebControls.Button btnAllocateTips;
         
         /// <summary>
-        /// gvDinnerTips control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvDinnerTips;
-        
-        /// <summary>
-        /// gvDinnerAllocateTips control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvDinnerAllocateTips;
-        
-        /// <summary>
         /// pnlDinnerServer control.
         /// </summary>
         /// <remarks>
@@ -569,6 +551,15 @@ namespace TipShareV2.Webpages {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gvDinnerSupportAlloc;
+        
+        /// <summary>
+        /// gvDinnerSupportTipsEarned control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gvDinnerSupportTipsEarned;
         
         /// <summary>
         /// lblDinnerSupportError control.

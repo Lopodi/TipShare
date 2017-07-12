@@ -140,8 +140,9 @@
                 </asp:GridView>
                 <asp:Label ID="lblLunchSupportError" runat="server" />
             </asp:Panel>
-                <asp:GridView ID="gvLunchSupportTipsEarned" runat="server">
-                </asp:GridView>
+            <asp:GridView ID="gvLunchSupportTipsEarned" runat="server">   </asp:GridView>
+<%--                <asp:GridView ID="gvLunchSupportTipsEarned" runat="server">
+                </asp:GridView>--%>
             
                 <br />
 
@@ -150,13 +151,11 @@
             <br />
             <br />
 
-            <asp:Button ID="btnAllocateTips" Text="Allocate Tips" OnClick="btnAllocateTips_Click" runat="server" />
+            <asp:Button ID="btnAllocateTips" Text="Reallocate Tips" OnClick="btnAllocateLunchTips_Click" runat="server" />
+            
             <br />
             <br />
 
-           <!-- <h1> Dinner Shift </h1>
-            <asp:GridView ID="gvDinnerTips" runat="server">   </asp:GridView>
-            <asp:GridView ID="gvDinnerAllocateTips" runat="server">   </asp:GridView> !-->
 
             <h2> Dinner Shift </h2>
             <h3> Enter Tips </h3> 
@@ -257,8 +256,8 @@
                 <asp:Label ID="lblDinnerSupportTipsAlloc" runat="server" />
                 <asp:Label ID="lblDinnerSupportTipsEarned" runat="server" />
 
-                <asp:Button ID="btnSaveDinnerSupportHours" Text="Save" runat="server" />
-                <%--OnClick="SaveDinnerHours" --%>
+                <asp:Button ID="btnSaveDinnerSupportHours" Text="Save" OnClick="btnSaveDinnerHours_Click" runat="server" />
+                
 
                 <br />
                 <asp:GridView ID="gvDinnerSupportAlloc" runat="server" AllowSorting="True" AutoGenerateColumns="False" 
@@ -275,6 +274,7 @@
                         <asp:CommandField ShowDeleteButton="True" />
                     </Columns>
                 </asp:GridView>
+                <asp:GridView ID="gvDinnerSupportTipsEarned" runat="server"></asp:GridView>
                 <asp:Label ID="lblDinnerSupportError" runat="server" />
             </asp:Panel>
             
@@ -289,7 +289,7 @@
             <br />
             <br />
 
-            <asp:Button ID="btnDinnerAllocTips" Text="Allocate Tips" OnClick="btnAllocateTips_Click" runat="server" />
+            <asp:Button ID="btnDinnerAllocTips" Text="Reallocate Tips" OnClick="btnDinnerAllocTips_Click" runat="server" />
             <br />
             <br />
                     </asp:Panel>
