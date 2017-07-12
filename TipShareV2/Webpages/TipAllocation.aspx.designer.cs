@@ -184,6 +184,15 @@ namespace TipShareV2.Webpages {
         protected global::System.Web.UI.WebControls.Label lblLunchServerError;
         
         /// <summary>
+        /// gvLunchTipAllocSave control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gvLunchTipAllocSave;
+        
+        /// <summary>
         /// pnlLunchSupport control.
         /// </summary>
         /// <remarks>
@@ -544,13 +553,13 @@ namespace TipShareV2.Webpages {
         protected global::System.Web.UI.WebControls.Label lblDinnerSupportTipsEarned;
         
         /// <summary>
-        /// btnLuncHoursWorked control.
+        /// btnSaveDinnerSupportHours control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnLuncHoursWorked;
+        protected global::System.Web.UI.WebControls.Button btnSaveDinnerSupportHours;
         
         /// <summary>
         /// gvDinnerSupportAlloc control.

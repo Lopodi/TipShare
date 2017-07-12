@@ -89,6 +89,9 @@
                 <asp:Label ID="lblLunchServerError" runat="server" />
             </asp:Panel>
             
+            <asp:GridView ID="gvLunchTipAllocSave" runat="server">
+            </asp:GridView>
+            
             <br />
             <br />
 
@@ -136,9 +139,9 @@
                     </Columns>
                 </asp:GridView>
                 <asp:Label ID="lblLunchSupportError" runat="server" />
-                <asp:GridView ID="gvLunchSupportTipsEarned" Visible="false" runat="server">
-                </asp:GridView>
             </asp:Panel>
+                <asp:GridView ID="gvLunchSupportTipsEarned" runat="server">
+                </asp:GridView>
             
                 <br />
 
@@ -192,8 +195,8 @@
                 <asp:Label ID="lblDinnerTipPoolAllocSum" Text=" " runat="server" />
                                 
 
-                <asp:Button ID="btnSaveDinner" Text="Save" runat="server" />
-                    <%-- OnClick="btnSaveDinner_Click --%>
+                <asp:Button ID="btnSaveDinner" Text="Save" OnClick="btnSaveDinner_Click" runat="server" />
+                    
 
                     </asp:Panel>
                 <asp:GridView ID="gvDinnerTipAlloc" runat="server" AllowSorting="True" AutoGenerateColumns="False" 
@@ -254,7 +257,8 @@
                 <asp:Label ID="lblDinnerSupportTipsAlloc" runat="server" />
                 <asp:Label ID="lblDinnerSupportTipsEarned" runat="server" />
 
-                <asp:Button ID="btnLuncHoursWorked" OnClick="SaveLunchHours" Text="Save" runat="server" />
+                <asp:Button ID="btnSaveDinnerSupportHours" Text="Save" runat="server" />
+                <%--OnClick="SaveDinnerHours" --%>
 
                 <br />
                 <asp:GridView ID="gvDinnerSupportAlloc" runat="server" AllowSorting="True" AutoGenerateColumns="False" 
