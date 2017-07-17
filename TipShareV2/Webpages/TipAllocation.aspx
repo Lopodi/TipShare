@@ -298,6 +298,7 @@
             
             <a href="EmployeeAdministration.aspx" id="EmployeeAdminLink">Employee Administration</a>
             <a href="UserAdministration.aspx" id="UserAdminLink">User Administration</a>
+            <a href="Reports.aspx" id="ReportsLink">Reports</a>
          </div>
 
          

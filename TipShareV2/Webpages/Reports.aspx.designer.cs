@@ -10,78 +10,69 @@
 namespace TipShareV2.Webpages {
     
     
-    public partial class Test {
+    public partial class Reports {
         
         /// <summary>
-        /// form1 control.
+        /// frmReports control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlForm form1;
+        protected global::System.Web.UI.HtmlControls.HtmlForm frmReports;
         
         /// <summary>
-        /// DropDownList1 control.
+        /// cldBeginDate control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList DropDownList1;
+        protected global::System.Web.UI.WebControls.Calendar cldBeginDate;
         
         /// <summary>
-        /// txtGrossSales control.
+        /// cldEndDate control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtGrossSales;
+        protected global::System.Web.UI.WebControls.Calendar cldEndDate;
         
         /// <summary>
-        /// txtTipsEarned control.
+        /// btnRunReport control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtTipsEarned;
+        protected global::System.Web.UI.WebControls.Button btnRunReport;
         
         /// <summary>
-        /// txtTipAllocPercent control.
+        /// gvTaxableTips control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtTipAllocPercent;
+        protected global::System.Web.UI.WebControls.GridView gvTaxableTips;
         
         /// <summary>
-        /// lblTipPool control.
+        /// sdsGratuity control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTipPool;
+        protected global::System.Web.UI.WebControls.SqlDataSource sdsGratuity;
         
         /// <summary>
-        /// btnSave control.
+        /// sdsEmployee control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSave;
-        
-        /// <summary>
-        /// sdsEmployeeDropDown control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.SqlDataSource sdsEmployeeDropDown;
+        protected global::System.Web.UI.WebControls.SqlDataSource sdsEmployee;
     }
 }

@@ -71,6 +71,7 @@
     </Content>
     <Content Include="Default.aspx" />
     <Content Include="packages.config" />
+    <Content Include="Webpages\Reports.aspx" />
     <Content Include="Webpages\UserAdministration.aspx" />
     <None Include="Properties\PublishProfiles\TipShareV220170511085013 - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
@@ -89,8 +90,6 @@
     <Content Include="Webpages\Registration.aspx" />
     <Content Include="Web.config" />
     <Content Include="Webpages\ResetPassword.aspx" />
-    <Content Include="Webpages\Test.aspx" />
-    <Content Include="Webpages\TipAllocation Test.aspx" />
     <Content Include="Webpages\TipAllocation.aspx" />
   </ItemGroup>
   <ItemGroup>
@@ -133,26 +132,19 @@
     <Compile Include="Webpages\Registration.aspx.designer.cs">
       <DependentUpon>Registration.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Webpages\Reports.aspx.cs">
+      <DependentUpon>Reports.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Webpages\Reports.aspx.designer.cs">
+      <DependentUpon>Reports.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Webpages\ResetPassword.aspx.cs">
       <DependentUpon>ResetPassword.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Webpages\ResetPassword.aspx.designer.cs">
       <DependentUpon>ResetPassword.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Webpages\Test.aspx.cs">
-      <DependentUpon>Test.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Webpages\Test.aspx.designer.cs">
-      <DependentUpon>Test.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Webpages\TipAllocation Test.aspx.cs">
-      <DependentUpon>TipAllocation Test.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Webpages\TipAllocation Test.aspx.designer.cs">
-      <DependentUpon>TipAllocation Test.aspx</DependentUpon>
     </Compile>
     <Compile Include="Webpages\TipAllocation.aspx.cs">
       <DependentUpon>TipAllocation.aspx</DependentUpon>
