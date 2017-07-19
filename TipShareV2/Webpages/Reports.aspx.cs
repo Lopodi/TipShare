@@ -46,7 +46,7 @@ namespace TipShareV2.Webpages
             string connStringServers = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             connTipAlloc = new SqlConnection(connStringServers);
 
-            SqlCommand cmdNetEarnings = new SqlCommand("spServerTipsAllocation", connTipAlloc);
+            SqlCommand cmdNetEarnings = new SqlCommand("spPayPeriodReport", connTipAlloc);
             cmdNetEarnings.CommandType = CommandType.StoredProcedure;
 
             SqlParameter paramBeginDate = new SqlParameter("@ShiftDateBegin", dtBeginDate.ToShortDateString());
@@ -54,9 +54,6 @@ namespace TipShareV2.Webpages
 
             SqlParameter paramEndDate = new SqlParameter("@ShiftDateEnd", dtEndDate.ToShortDateString());
             cmdNetEarnings.Parameters.Add(paramEndDate);
-
-            SqlParameter paramShift = new SqlParameter("@Shift", "Lunch");
-            cmdNetEarnings.Parameters.Add(paramShift);
 
 // retreive data -->
 

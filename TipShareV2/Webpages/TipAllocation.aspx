@@ -141,8 +141,6 @@
                 <asp:Label ID="lblLunchSupportError" runat="server" />
             </asp:Panel>
             <asp:GridView ID="gvLunchSupportTipsEarned" runat="server">   </asp:GridView>
-<%--                <asp:GridView ID="gvLunchSupportTipsEarned" runat="server">
-                </asp:GridView>--%>
             
                 <br />
 
@@ -260,8 +258,22 @@
                 
 
                 <br />
-                <asp:GridView ID="gvDinnerSupportAlloc" runat="server" AllowSorting="True" AutoGenerateColumns="False" 
+                    <asp:GridView ID="gvDinnerSupportAlloc" runat="server" AllowSorting="True" AutoGenerateColumns="False" 
                     DataKeyNames="GratuityID,EmployeeID,UserID" Visible="False">
+                    <Columns>
+<%--                        <asp:CommandField ShowEditButton="True" />
+                        <asp:BoundField DataField="EmployeeName" HeaderText="Select Server" ReadOnly="True" SortExpression="EmployeeName" />
+                        <asp:BoundField DataField="HoursWorked" HeaderText="Hours Worked" SortExpression="HoursWorked" >
+                        <ItemStyle HorizontalAlign="Right" />
+                        </asp:BoundField>
+                        <asp:BoundField DataField="TipsEarnedSupport" ReadOnly="True" HeaderText="Support Staff Tips Earned" SortExpression="TipsEarnedSupport" DataFormatString="{0:c}" >
+                        <ItemStyle HorizontalAlign="Right" />
+                        </asp:BoundField>
+                        <asp:CommandField ShowDeleteButton="True" />--%>
+                    </Columns>
+                </asp:GridView>
+                <%--<asp:GridView ID="gvDinnerSupportAlloc" runat="server" AllowSorting="True" AutoGenerateColumns="False">--%> 
+    <%--                DataKeyNames="GratuityID,EmployeeID,UserID" Visible="False">
                     <Columns>
                         <asp:CommandField ShowEditButton="True" />
                         <asp:BoundField DataField="EmployeeName" HeaderText="Select Server" ReadOnly="True" SortExpression="EmployeeName" />
@@ -272,8 +284,8 @@
                         <ItemStyle HorizontalAlign="Right" />
                         </asp:BoundField>
                         <asp:CommandField ShowDeleteButton="True" />
-                    </Columns>
-                </asp:GridView>
+                    </Columns>--%>
+                <%--</asp:GridView>--%>
                 <asp:GridView ID="gvDinnerSupportTipsEarned" runat="server"></asp:GridView>
                 <asp:Label ID="lblDinnerSupportError" runat="server" />
             </asp:Panel>
@@ -292,7 +304,7 @@
             <asp:Button ID="btnDinnerAllocTips" Text="Reallocate Tips" OnClick="btnDinnerAllocTips_Click" runat="server" />
             <br />
             <br />
-                    </asp:Panel>
+                    <%--</asp:Panel>--%>
                     <br />
 
             

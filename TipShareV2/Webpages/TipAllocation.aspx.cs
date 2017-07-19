@@ -150,7 +150,7 @@ namespace TipShareV2.Webpages
             gvLunchTipAlloc.DataSource = dtLunchServers;
             gvLunchTipAlloc.DataBind();
 
-         // retrieve dinner server data -->
+// retrieve dinner server data -->
 
             try
 
@@ -199,8 +199,8 @@ namespace TipShareV2.Webpages
 
               gvLunchSupportTipsEarned.DataSource = dtLunchSupportStaff;
               gvLunchSupportTipsEarned.DataBind();
-            
-         // retrieve dinner support data -->
+
+            // retrieve dinner support data -->
 
             try
 
@@ -222,11 +222,11 @@ namespace TipShareV2.Webpages
 
             }
 
-              gvDinnerSupportAlloc.DataSource = dtDinnerSupportStaff;
-              gvDinnerSupportAlloc.DataBind();
+            gvDinnerSupportTipsEarned.DataSource = dtDinnerSupportStaff;
+            gvDinnerSupportTipsEarned.DataBind();
 
 
-         //Sum Lunch tip pool and dipslay for selected date -->
+            //Sum Lunch tip pool and display for selected date -->
 
             SqlCommand cmdLunchTipPool;
 
