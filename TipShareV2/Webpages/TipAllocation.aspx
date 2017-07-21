@@ -58,8 +58,15 @@
 
                 <%--<asp:ValidationSummary ValidationGroup="LunchServer" ID="vsLunchServerError" runat="server" />--%>
                   </asp:Panel>  
-                <asp:GridView ID="gvLunchTipAlloc" runat="server" AllowSorting="True" AutoGenerateColumns="False" 
-                    DataKeyNames="GratuityID,EmployeeID,UserID" Visible="False">
+                <asp:GridView ID="gvLunchTipAlloc" runat="server" 
+                    Visible="False"
+                    AllowSorting="True" 
+                    AutoGenerateColumns="False" 
+                    DataKeyNames ="GratuityID,EmployeeID,UserID" 
+                    AutoGenderateEditButton ="True" 
+                    OnRowEditing = "gvLunchTipAlloc_RowEditing" 
+                    OnRowCancelingEdit = "gvLunchTipAlloc_RowCancelingEdit"
+                    OnRowUpdating = "gvLunchTipAlloc_RowUpdating">
                     <Columns>
                         <asp:CommandField ShowEditButton="True" />
                         <asp:BoundField DataField="EmployeeName" HeaderText="Select Server" ReadOnly="True" SortExpression="EmployeeName" />
@@ -89,7 +96,11 @@
                 <asp:Label ID="lblLunchServerError" runat="server" />
             </asp:Panel>
             
-            <asp:GridView ID="gvLunchTipAllocSave" runat="server">
+            <asp:GridView ID="gvLunchTipAllocSave" runat="server"
+                AutoGenderateEditButton ="True" 
+                OnRowEditing ="gvLunchTipAllocSave_RowEditing" 
+                OnRowCancelingEdit = "gvLunchTipAllocSave_RowCancelingEdit"
+                OnRowUpdating = "gvLunchTipAllocSave_RowUpdating">
             </asp:GridView>
             
             <br />

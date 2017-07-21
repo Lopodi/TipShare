@@ -1029,6 +1029,81 @@ namespace TipShareV2.Webpages
             }
 
         }
+
+ //Editing Lunch DataTable for gvLunchTipAlloc -->
+
+        protected void gvLunchTipAlloc_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+            // Set the edit index
+            gvLunchTipAlloc.EditIndex = e.NewEditIndex;
+            // Bind Data to gridview
+            gvLunchTipAlloc.DataBind();
+        }
+
+        protected void gvLunchTipAlloc_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        {
+            // Reset the edit index
+            gvLunchTipAlloc.EditIndex = -1;
+            // Bind Data to gridview
+            gvLunchTipAlloc.DataBind();
+        }
+
+        protected void gvLunchTipAlloc_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        {
+            
+            //Retrieve the table from the session object.
+            DataTable dtLunchTipAllocUpdate = (DataTable)Session["LunchTipAllocUpdate"];
+
+            //Update the values.
+            GridViewRow row = gvLunchTipAlloc.Rows[e.RowIndex];
+            dtLunchTipAllocUpdate.Rows[row.DataItemIndex]["GrossSales"] = ((TextBox)(row.Cells[1].Controls[0])).Text;
+            dtLunchTipAllocUpdate.Rows[row.DataItemIndex]["TipsEarned"] = ((TextBox)(row.Cells[2].Controls[0])).Text;
+            dtLunchTipAllocUpdate.Rows[row.DataItemIndex]["TipPercentAllocated"] = ((TextBox)(row.Cells[3].Controls[0])).Text;
+
+            //Reset the edit index.
+            gvLunchTipAlloc.EditIndex = -1;
+
+            //Bind data to the GridView control.
+            gvLunchTipAlloc.DataBind();     
+        }
+
+//Editing Lunch DataTable for gvLunchTipAllocSave -->
+
+        protected void gvLunchTipAllocSave_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+            // Set the edit index
+            gvLunchTipAlloc.EditIndex = e.NewEditIndex;
+            // Bind Data to gridview
+            gvLunchTipAlloc.DataBind();
+        }
+
+        protected void gvLunchTipAllocSave_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        {
+            // Reset the edit index
+            gvLunchTipAlloc.EditIndex = -1;
+            // Bind Data to gridview
+            gvLunchTipAlloc.DataBind();
+        }
+
+        protected void gvLunchTipAllocSave_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        {
+
+            //Retrieve the table from the session object.
+            DataTable dtLunchTipAllocUpdate = (DataTable)Session["LunchTipAllocUpdate"];
+
+            //Update the values.
+            GridViewRow row = gvLunchTipAlloc.Rows[e.RowIndex];
+            dtLunchTipAllocUpdate.Rows[row.DataItemIndex]["GrossSales"] = ((TextBox)(row.Cells[1].Controls[0])).Text;
+            dtLunchTipAllocUpdate.Rows[row.DataItemIndex]["TipsEarned"] = ((TextBox)(row.Cells[2].Controls[0])).Text;
+            dtLunchTipAllocUpdate.Rows[row.DataItemIndex]["TipPercentAllocated"] = ((TextBox)(row.Cells[3].Controls[0])).Text;
+
+            //Reset the edit index.
+            gvLunchTipAlloc.EditIndex = -1;
+
+            //Bind data to the GridView control.
+            gvLunchTipAlloc.DataBind();
+
+        }
     }
 }
         

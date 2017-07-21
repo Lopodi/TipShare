@@ -24,7 +24,7 @@
                 DataKeyNames="EmployeeID,StatusDate,UserID,DateCreated,CreatedBy" 
                 DataSourceID="sdsEmployee" ShowFooter="False" OnSelectedIndexChanged="gvEmployee_SelectedIndexChanged">
                 <Columns>
-                    <asp:CommandField ShowDeleteButton="True" ShowEditButton="True" />
+                    <asp:CommandField ShowDeleteButton="False" ShowEditButton="True" />
                     <asp:TemplateField HeaderText="Employee ID" InsertVisible="False" SortExpression="EmployeeID">
                         <ItemTemplate>
                             <asp:Label ID="lblEmployeeID" runat="server" Text='<%# Bind("EmployeeID") %>'></asp:Label>
