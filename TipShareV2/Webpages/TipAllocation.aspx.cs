@@ -1030,7 +1030,7 @@ namespace TipShareV2.Webpages
 
         }
 
- //Editing Lunch DataTable for gvLunchTipAlloc -->
+//Editing lunch servers for a particular day -->
 
         protected void gvLunchTipAlloc_RowEditing(object sender, GridViewEditEventArgs e)
         {
@@ -1054,6 +1054,9 @@ namespace TipShareV2.Webpages
             //Retrieve the table from the session object.
             DataTable dtLunchTipAllocUpdate = (DataTable)Session["LunchTipAllocUpdate"];
 
+            DataTable dtLunchServers = new DataTable();
+            SqlCommand cmdLunchTipAllocationServer = new SqlCommand();
+
             //Update the values.
             GridViewRow row = gvLunchTipAlloc.Rows[e.RowIndex];
             dtLunchTipAllocUpdate.Rows[row.DataItemIndex]["GrossSales"] = ((TextBox)(row.Cells[1].Controls[0])).Text;
@@ -1067,43 +1070,221 @@ namespace TipShareV2.Webpages
             gvLunchTipAlloc.DataBind();     
         }
 
-//Editing Lunch DataTable for gvLunchTipAllocSave -->
-
-        protected void gvLunchTipAllocSave_RowEditing(object sender, GridViewEditEventArgs e)
+//Delete lunch servers from a particular day -->
+        protected void gvLunchTipAlloc_DeleteRow(object sender, GridViewDeleteEventArgs e)
         {
-            // Set the edit index
-            gvLunchTipAlloc.EditIndex = e.NewEditIndex;
-            // Bind Data to gridview
-            gvLunchTipAlloc.DataBind();
+            var GratuityID = gvLunchTipAlloc.DataKeys[e.RowIndex].Value;
+            DateTime shiftDate = cldShiftDate.SelectedDate;
+
+            string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            using (connTipAlloc = new SqlConnection(connString))
+            {
+                string sqlDelete = "Delete from Gratuity where GratuityID = @GratuityID";
+                using (SqlCommand cmdDelete = new SqlCommand(sqlDelete, connTipAlloc))
+                {
+                    cmdDelete.Parameters.AddWithValue("@GratuityID", GratuityID);
+                    connTipAlloc.Open();
+                    cmdDelete.ExecuteNonQuery();
+                    connTipAlloc.Close();
+                }
+
+                // continue to display gridview for the selected date, appended for deleted row -->
+
+                DataTable dtLunchServers = new DataTable();
+                string connStringServers = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+                connTipAlloc = new SqlConnection(connStringServers);
+
+                //stored procedure -->
+                SqlCommand cmdTipAllocationServer = new SqlCommand("spServerTipsAllocation", connTipAlloc);
+                cmdTipAllocationServer.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter shiftDateBeginServerParameter = new SqlParameter("@ShiftDateBegin", shiftDate.ToShortDateString());
+                cmdTipAllocationServer.Parameters.Add(shiftDateBeginServerParameter);
+
+                SqlParameter shiftDateEndServerParameter = new SqlParameter("@ShiftDateEnd", shiftDate.ToShortDateString());
+                cmdTipAllocationServer.Parameters.Add(shiftDateEndServerParameter);
+
+                SqlParameter shiftServerParameter = new SqlParameter("@Shift", "Lunch");
+                cmdTipAllocationServer.Parameters.Add(shiftServerParameter);
+
+                try
+
+                {
+                    connTipAlloc.Open();
+                    SqlDataReader drServerTipsAllocation = cmdTipAllocationServer.ExecuteReader(CommandBehavior.CloseConnection);
+                    dtLunchServers.Load(drServerTipsAllocation);
+                }
+
+                catch (Exception ex)
+
+                {
+                    Response.Write("Error occured" + ex.Message);
+                }
+
+                finally
+                {
+                    connTipAlloc.Close();
+                }
+                // bind the appropriate SQL results to your gridview control -->
+                gvLunchTipAlloc.DataSource = dtLunchServers;
+                gvLunchTipAlloc.DataBind();
+            }
+
         }
 
-        protected void gvLunchTipAllocSave_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+//Editing lunch support for a particular day -->
+
+        protected void gvLunchSupportTipAlloc_RowEditing(object sender, GridViewEditEventArgs e)
         {
-            // Reset the edit index
-            gvLunchTipAlloc.EditIndex = -1;
-            // Bind Data to gridview
-            gvLunchTipAlloc.DataBind();
         }
 
-        protected void gvLunchTipAllocSave_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        protected void gvLunchSupportTipAlloc_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
+        }
 
-            //Retrieve the table from the session object.
-            DataTable dtLunchTipAllocUpdate = (DataTable)Session["LunchTipAllocUpdate"];
+        protected void gvLunchSupportTipAlloc_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        {
+        }
 
-            //Update the values.
-            GridViewRow row = gvLunchTipAlloc.Rows[e.RowIndex];
-            dtLunchTipAllocUpdate.Rows[row.DataItemIndex]["GrossSales"] = ((TextBox)(row.Cells[1].Controls[0])).Text;
-            dtLunchTipAllocUpdate.Rows[row.DataItemIndex]["TipsEarned"] = ((TextBox)(row.Cells[2].Controls[0])).Text;
-            dtLunchTipAllocUpdate.Rows[row.DataItemIndex]["TipPercentAllocated"] = ((TextBox)(row.Cells[3].Controls[0])).Text;
+        //Delete lunch support from a particular day -->
+        protected void gvLunchSupportTipAlloc_DeleteRow(object sender, GridViewDeleteEventArgs e)
+        {
+            var GratuityID = gvLunchSupportAlloc.DataKeys[e.RowIndex].Value;
+            DateTime shiftDate = cldShiftDate.SelectedDate;
 
-            //Reset the edit index.
-            gvLunchTipAlloc.EditIndex = -1;
+            string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            using (connTipAlloc = new SqlConnection(connString))
+            {
+                string sqlDelete = "Delete from Gratuity where GratuityID = @GratuityID";
+                using (SqlCommand cmdDelete = new SqlCommand(sqlDelete, connTipAlloc))
+                {
+                    cmdDelete.Parameters.AddWithValue("@GratuityID", GratuityID);
+                    connTipAlloc.Open();
+                    cmdDelete.ExecuteNonQuery();
+                    connTipAlloc.Close();
+                }
 
-            //Bind data to the GridView control.
-            gvLunchTipAlloc.DataBind();
+                // continue to display gridview for the selected date, appended for deleted row -->
+                string connStringServers = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+                connTipAlloc = new SqlConnection(connStringServers);
+
+                //stored procedure -->
+                DataTable gridTableSupportStaff = new DataTable();
+
+                //stored procedure
+                SqlCommand cmdTipAllocation = new SqlCommand("spSupportTipsAllocation", connTipAlloc);
+                cmdTipAllocation.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter shiftDateBeginParameter = new SqlParameter("@ShiftDateBegin", shiftDate.ToShortDateString());
+                cmdTipAllocation.Parameters.Add(shiftDateBeginParameter);
+
+                SqlParameter shiftDateEndParameter = new SqlParameter("@ShiftDateEnd", shiftDate.ToShortDateString());
+                cmdTipAllocation.Parameters.Add(shiftDateEndParameter);
+
+                SqlParameter shiftParameter = new SqlParameter("@Shift", "Lunch");
+                cmdTipAllocation.Parameters.Add(shiftParameter);
+
+                try
+                {
+                    connTipAlloc.Open();
+                    SqlDataReader drHours = cmdTipAllocation.ExecuteReader(CommandBehavior.CloseConnection);
+                    gridTableSupportStaff.Load(drHours);
+                }
+                // above, data is pulling in the rows and columns as identifed in the sqldatareader and loading comand in "try"
+
+                catch (Exception ex)
+
+                {
+                    Response.Write("Error occured" + ex.Message);
+                }
+
+                finally
+                {
+                    connTipAlloc.Close();
+                }
+
+                gvLunchSupportTipsEarned.DataSource = gridTableSupportStaff;
+                gvLunchSupportTipsEarned.DataBind();
+                gvLunchSupportAlloc.Visible = true;
+                //gvLunchSupportTipsEarned.Visible = true;
+
+            }
+        }
+        //Edit dinner servers for a particular day -->
+
+        protected void gvDinnerTipAlloc_RowEditing(object sender, GridViewEditEventArgs e)
+        { }
+
+        protected void gvDinnerTipAlloc_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        { }
+
+        protected void gvDinnerTipAlloc_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        { }
+
+
+        //Delete dinner servers from a particular day -->
+        protected void gvDinnerTipAlloc_DeleteRow(object sender, GridViewDeleteEventArgs e)
+        {
+            var GratuityID = gvDinnerTipAlloc.DataKeys[e.RowIndex].Value;
+            DateTime shiftDate = cldShiftDate.SelectedDate;
+
+            string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            using (connTipAlloc = new SqlConnection(connString))
+            {
+                string sqlDelete = "Delete from Gratuity where GratuityID = @GratuityID";
+                using (SqlCommand cmdDelete = new SqlCommand(sqlDelete, connTipAlloc))
+                {
+                    cmdDelete.Parameters.AddWithValue("@GratuityID", GratuityID);
+                    connTipAlloc.Open();
+                    cmdDelete.ExecuteNonQuery();
+                    connTipAlloc.Close();
+                }
+
+                // continue to display gridview for the selected date, appended for new row -->
+
+                DataTable dtDinnerServers = new DataTable();
+                string connStringServers = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+                connTipAlloc = new SqlConnection(connStringServers);
+
+                //stored procedure -->
+                SqlCommand cmdTipAllocationServer = new SqlCommand("spServerTipsAllocation", connTipAlloc);
+                cmdTipAllocationServer.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter shiftDateBeginServerParameter = new SqlParameter("@ShiftDateBegin", shiftDate.ToShortDateString());
+                cmdTipAllocationServer.Parameters.Add(shiftDateBeginServerParameter);
+
+                SqlParameter shiftDateEndServerParameter = new SqlParameter("@ShiftDateEnd", shiftDate.ToShortDateString());
+                cmdTipAllocationServer.Parameters.Add(shiftDateEndServerParameter);
+
+                SqlParameter shiftServerParameter = new SqlParameter("@Shift", "Dinner");
+                cmdTipAllocationServer.Parameters.Add(shiftServerParameter);
+
+                try
+
+                {
+                    connTipAlloc.Open();
+                    SqlDataReader drServerTipsAllocation = cmdTipAllocationServer.ExecuteReader(CommandBehavior.CloseConnection);
+                    dtDinnerServers.Load(drServerTipsAllocation);
+                }
+
+                catch (Exception ex)
+
+                {
+                    Response.Write("Error occured" + ex.Message);
+                }
+
+                finally
+                {
+                    connTipAlloc.Close();
+                }
+                // bind the appropriate SQL results to your gridview control -->
+                gvDinnerTipAlloc.DataSource = dtDinnerServers;
+                gvDinnerTipAlloc.DataBind();
+            }
 
         }
+
+
     }
 }
         
