@@ -1261,7 +1261,8 @@ namespace TipShareV2.Webpages
             }
         }
         
-        //Edit dinner servers for a particular day -->
+//Edit dinner servers for a particular day -->
+
 
         protected void gvDinnerTipAlloc_RowEditing(object sender, GridViewEditEventArgs e)
         { }
@@ -1273,7 +1274,7 @@ namespace TipShareV2.Webpages
         { }
 
 
-        //Delete dinner servers from a particular day -->
+//Delete dinner servers from a particular day -->
         protected void gvDinnerTipAlloc_DeleteRow(object sender, GridViewDeleteEventArgs e)
         {
             var GratuityID = gvDinnerTipAlloc.DataKeys[e.RowIndex].Value;
@@ -1333,6 +1334,136 @@ namespace TipShareV2.Webpages
                 gvDinnerTipAlloc.DataBind();
             }
 
+        }
+
+//Edit dinner support from a particular day -->
+
+        protected void btnEditDinnerSupportHours_Click(object sender, EventArgs e)
+        {
+            DateTime shiftDate = cldShiftDate.SelectedDate;
+            DataTable dtEditSupportHours = new DataTable();
+
+            string connStringSupport = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            connTipAlloc = new SqlConnection(connStringSupport);
+
+            SqlCommand cmdEditDinnerSupportHours = new SqlCommand("spEditSupportHours", connTipAlloc);
+            cmdEditDinnerSupportHours.CommandType = CommandType.StoredProcedure;
+
+            SqlParameter DateBeginSupportParameter = new SqlParameter("@ShiftDateBegin", shiftDate.ToShortDateString());
+            cmdEditDinnerSupportHours.Parameters.Add(DateBeginSupportParameter);
+
+            SqlParameter DateEndSupportParameter = new SqlParameter("@ShiftDateEnd", shiftDate.ToShortDateString());
+            cmdEditDinnerSupportHours.Parameters.Add(DateEndSupportParameter);
+
+            SqlParameter shiftSupportParameter = new SqlParameter("@Shift", "Dinner");
+            cmdEditDinnerSupportHours.Parameters.Add(shiftSupportParameter);
+
+            try
+
+            {
+                connTipAlloc.Open();
+                SqlDataReader drHours = cmdEditDinnerSupportHours.ExecuteReader(CommandBehavior.CloseConnection);
+                dtEditSupportHours.Load(drHours);
+            }
+
+            catch (Exception ex)
+
+            {
+                Response.Write("Error occured" + ex.Message);
+            }
+
+            finally
+
+            {
+                connTipAlloc.Close();
+            }
+            gvEditDinnerSupportHours.DataSource = dtEditSupportHours;
+            gvEditDinnerSupportHours.DataBind();
+            //gvDinnerSupportAlloc.Visible = false;
+            //gvDinnerSupportTipsEarned.Visible = false;
+            gvEditDinnerSupportHours.Visible = true;
+        }
+
+        protected void gvDinnerSupportHours_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+        }
+
+        protected void gvDinnerSupportHours_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        {
+        }
+
+        protected void gvDinnerSupportHours_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        {
+        }
+
+//Delete dinner support from a particular day -->
+        protected void gvDinnerSupportHours_DeleteRow(object sender, GridViewDeleteEventArgs e)
+        {
+            var GratuityID = gvEditDinnerSupportHours.DataKeys[e.RowIndex].Value;
+            DateTime shiftDate = cldShiftDate.SelectedDate;
+
+            string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            using (connTipAlloc = new SqlConnection(connString))
+
+            {
+                string sqlDelete = "Delete from Gratuity where GratuityID = @GratuityID";
+                using (SqlCommand cmdDelete = new SqlCommand(sqlDelete, connTipAlloc))
+                {
+                    cmdDelete.Parameters.AddWithValue("@GratuityID", GratuityID);
+                    connTipAlloc.Open();
+                    cmdDelete.ExecuteNonQuery();
+                    connTipAlloc.Close();
+                }
+
+                // continue to display gridview for the selected date, appended for deleted row -->
+                string connStringServers = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+                connTipAlloc = new SqlConnection(connStringServers);
+
+                //stored procedure -->
+                DataTable gridTableSupportStaff = new DataTable();
+
+                //stored procedure
+                SqlCommand cmdTipAllocation = new SqlCommand("spSupportTipsAllocation", connTipAlloc);
+                cmdTipAllocation.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter shiftDateBeginParameter = new SqlParameter("@ShiftDateBegin", shiftDate.ToShortDateString());
+                cmdTipAllocation.Parameters.Add(shiftDateBeginParameter);
+
+                SqlParameter shiftDateEndParameter = new SqlParameter("@ShiftDateEnd", shiftDate.ToShortDateString());
+                cmdTipAllocation.Parameters.Add(shiftDateEndParameter);
+
+                SqlParameter shiftParameter = new SqlParameter("@Shift", "Dinner");
+                cmdTipAllocation.Parameters.Add(shiftParameter);
+
+                try
+                {
+                    connTipAlloc.Open();
+                    SqlDataReader drHours = cmdTipAllocation.ExecuteReader(CommandBehavior.CloseConnection);
+                    gridTableSupportStaff.Load(drHours);
+                }
+                // above, data is pulling in the rows and columns as identifed in the sqldatareader and loading comand in "try"
+
+                catch (Exception ex)
+
+                {
+                    Response.Write("Error occured" + ex.Message);
+                }
+
+                finally
+                {
+                    connTipAlloc.Close();
+                }
+
+                //gvEditLunchSupportHours.DataSource = gridTableSupportStaff;
+                //gvEditLunchSupportHours.DataBind();
+                //gvEditLunchSupportHours.Visible = true;
+                gvDinnerSupportTipsEarned.DataSource = gridTableSupportStaff;
+                gvDinnerSupportTipsEarned.DataBind();
+                gvDinnerSupportTipsEarned.Visible = true;
+                gvEditDinnerSupportHours.Visible = false;
+                gvDinnerSupportAlloc.Visible = false;
+
+            }
         }
 
     }

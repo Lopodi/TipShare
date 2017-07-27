@@ -580,6 +580,24 @@ namespace TipShareV2.Webpages {
         protected global::System.Web.UI.WebControls.GridView gvDinnerSupportTipsEarned;
         
         /// <summary>
+        /// btnEditDinnerSupportHours control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnEditDinnerSupportHours;
+        
+        /// <summary>
+        /// gvEditDinnerSupportHours control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gvEditDinnerSupportHours;
+        
+        /// <summary>
         /// lblDinnerSupportError control.
         /// </summary>
         /// <remarks>

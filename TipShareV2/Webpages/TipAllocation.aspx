@@ -312,26 +312,49 @@
                     <asp:GridView ID="gvDinnerSupportAlloc" runat="server" AllowSorting="True" 
                         AutoGenerateColumns="False" 
                     DataKeyNames="GratuityID,EmployeeID,UserID" Visible="False">
-                    <Columns>
-<%--                        <asp:CommandField ShowEditButton="True" />
-                        <asp:BoundField DataField="EmployeeName" HeaderText="Select Server" ReadOnly="True" SortExpression="EmployeeName" />
-                        <asp:BoundField DataField="HoursWorked" HeaderText="Hours Worked" SortExpression="HoursWorked" >
-                        <ItemStyle HorizontalAlign="Right" />
-                        </asp:BoundField>
-                        <asp:CommandField ShowDeleteButton="True" />--%>
-                    </Columns>
-                </asp:GridView>
-                <%--<asp:GridView ID="gvDinnerSupportAlloc" runat="server" AllowSorting="True" AutoGenerateColumns="False">--%> 
-    <%--                DataKeyNames="GratuityID,EmployeeID,UserID" Visible="False">
-                    <Columns>
-                        <asp:CommandField ShowEditButton="True" />
-                        <asp:BoundField DataField="EmployeeName" HeaderText="Select Server" ReadOnly="True" SortExpression="EmployeeName" />
-                        <asp:BoundField DataField="HoursWorked" HeaderText="Hours Worked" SortExpression="HoursWorked" >
-                        <ItemStyle HorizontalAlign="Right" />
-                        <asp:CommandField ShowDeleteButton="True" />
-                    </Columns>--%>
-                <%--</asp:GridView>--%>
+                    </asp:GridView>
                 <asp:GridView ID="gvDinnerSupportTipsEarned" runat="server"></asp:GridView>
+            
+                <br />  
+
+                <asp:Button ID="btnEditDinnerSupportHours" runat="server" Text="Edit Dinner Support Hours" 
+                OnClick="btnEditDinnerSupportHours_Click"/>
+
+            <br/>
+
+            <asp:GridView ID="gvEditDinnerSupportHours" runat="server"
+                AllowSorting="True" 
+                AutoGenerateColumns="False" 
+                DataKeyNames="GratuityID,UserID,EmployeeID" 
+                Visible="False"
+                OnRowEditing = "gvDinnerSupportHours_RowEditing" 
+                OnRowCancelingEdit = "gvDinnerSupportHours_RowCancelingEdit"
+                OnRowUpdating = "gvDinnerSupportHours_RowUpdating"
+                OnRowDeleting = "gvDinnerSupportHours_DeleteRow">
+                <Columns>
+                    <asp:BoundField DataField="EmployeeName" HeaderText="Server" ReadOnly="True"
+                        SortExpression="EmployeeName" />
+                    <asp:BoundField DataField="HoursWorked" HeaderText="Hours Worked" 
+                        SortExpression="HoursWorked" />
+                    <asp:BoundField DataField="EmployeeID" HeaderText="EmployeeID" SortExpression="EmployeeID" Visible="False" />
+                    <asp:BoundField DataField="GratuityID" Visible="false" />
+                    <asp:BoundField DataField="UserID" HeaderText="UserID" SortExpression="UserID" Visible="False" />
+                    <asp:BoundField DataField="HoursWorked" HeaderText="HoursWorked" SortExpression="HoursWorked" Visible="False" />
+                    <asp:BoundField DataField="ShiftDate" HeaderText="ShiftDate" SortExpression="ShiftDate" Visible="False" />
+                    <asp:BoundField DataField="Shift" HeaderText="Shift" SortExpression="Shift" Visible="False" />
+                    <asp:BoundField DataField="CreatedBy" HeaderText="CreatedBy" SortExpression="CreatedBy" Visible="False" />
+                    <asp:BoundField DataField="LastUpdateDate" HeaderText="LastUpdateDate" SortExpression="LastUpdateDate" Visible="False" />
+                    <asp:BoundField DataField="LastCreatedBy" HeaderText="LastCreatedBy" SortExpression="LastCreatedBy" Visible="False" />
+                    <asp:BoundField DataField="DateCreated" HeaderText="DateCreated" SortExpression="DateCreated" Visible="False" />                        
+                    <asp:TemplateField HeaderText="">
+                        <ItemTemplate>
+                            <span onclick="return confirm('Are you sure you want to delete this record?')">
+                                <asp:LinkButton ID="lnkDelete" runat="server" Text="Delete" CommandName="Delete" />
+                            </span>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                </Columns>
+            </asp:GridView>
                 <asp:Label ID="lblDinnerSupportError" runat="server" />
             </asp:Panel>
             
