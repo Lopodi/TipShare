@@ -55,10 +55,9 @@
                 <asp:Button ID="btnSaveLunch" Text="Save" runat="server" OnClick="btnSaveLunch_Click" />
                     <br />
 
-
                 <%--<asp:ValidationSummary ValidationGroup="LunchServer" ID="vsLunchServerError" runat="server" />--%>
                   </asp:Panel>  
-                <asp:GridView ID="gvLunchTipAlloc" runat="server" 
+                <asp:GridView ID="gvLunchTipAlloc" runat="server"
                     Visible="False"
                     AllowSorting="True" 
                     AutoGenerateColumns="False" 
@@ -68,20 +67,8 @@
                     OnRowCancelingEdit = "gvLunchTipAlloc_RowCancelingEdit"
                     OnRowUpdating = "gvLunchTipAlloc_RowUpdating"
                     OnRowDeleting = "gvLunchTipAlloc_DeleteRow">
-
                     <Columns>
-                        <asp:TemplateField  HeaderText="">
-                            <ItemTemplate> 
-                                <asp:LinkButton ID="lnkEdit" runat="server" Text="Edit" CommandName="Edit"
-                                    Visible="False"/>
-                            </ItemTemplate>
-                            <EditItemTemplate>
-                                <asp:LinkButton ID="lnkUpdate" runat="server" Text="Update" CommandName="Update" />
-                                <asp:LinkButton ID="lnkCancel" runat="server" Text="Cancel" CommandName="Cancel" />
-                            </EditItemTemplate>
-                        </asp:TemplateField>
-
-                        <asp:BoundField DataField="EmployeeName" HeaderText="Server" ReadOnly="True"
+                        <asp:BoundField DataField="EmployeeName" HeaderText="Server" ReadOnly="True" 
                             SortExpression="EmployeeName" />
                         <asp:BoundField DataField="GrossSales" HeaderText="Gross Sales Earned" SortExpression="GrossSales" DataFormatString="{0:c}" >
                         <ItemStyle HorizontalAlign="Right" />
@@ -102,8 +89,7 @@
                         <asp:BoundField DataField="CreatedBy" HeaderText="CreatedBy" SortExpression="CreatedBy" Visible="False" />
                         <asp:BoundField DataField="LastUpdateDate" HeaderText="LastUpdateDate" SortExpression="LastUpdateDate" Visible="False" />
                         <asp:BoundField DataField="LastCreatedBy" HeaderText="LastCreatedBy" SortExpression="LastCreatedBy" Visible="False" />
-                        <asp:BoundField DataField="DateCreated" HeaderText="DateCreated" SortExpression="DateCreated" Visible="False" />
-
+                        <asp:BoundField DataField="DateCreated" HeaderText="DateCreated" SortExpression="DateCreated" Visible="False" />                    
                         <asp:TemplateField HeaderText="">
                             <ItemTemplate>
                                 <span onclick="return confirm('Are you sure you want to delete this record?')">
@@ -112,7 +98,7 @@
                             </ItemTemplate>
                         </asp:TemplateField>
                     </Columns>
-                </asp:GridView>
+                    </asp:GridView>
                 <asp:Label ID="lblLunchServerError" runat="server" />
             </asp:Panel>
             
@@ -149,41 +135,54 @@
                 <asp:Button ID="btnSaveLunchSupportHours" OnClick="SaveLunchHours" Text="Save" runat="server" />
 
                 <br />
-                <asp:GridView ID="gvLunchSupportAlloc" runat="server" 
-                    AllowSorting="True" 
-                    AutoGenerateColumns="False" 
-                    DataKeyNames="GratuityID,EmployeeID,UserID" 
-                    Visible="False"
-                    OnRowEditing = "gvLunchSupportTipAlloc_RowEditing" 
-                    OnRowCancelingEdit = "gvLunchSupportTipAlloc_RowCancelingEdit"
-                    OnRowUpdating = "gvLunchSupportTipAlloc_RowUpdating"
-                    OnRowDeleting = "gvLunchSupportTipAlloc_DeleteRow">
-                    <Columns>
-                        <asp:BoundField DataField="EmployeeName" HeaderText="Server" ReadOnly="True" SortExpression="EmployeeName" />
-                        <asp:BoundField DataField="HoursWorked" HeaderText="Hours Worked" SortExpression="HoursWorked" >
-                        <ItemStyle HorizontalAlign="Right" />
-                        </asp:BoundField>
-                        <asp:BoundField DataField="TipsEarnedSupport" ReadOnly="True" HeaderText="Support Staff Tips Earned" SortExpression="TipsEarnedSupport" DataFormatString="{0:c}" >
-                        <ItemStyle HorizontalAlign="Right" />
-                        </asp:BoundField>
-                        <asp:TemplateField HeaderText="">
-                            <ItemTemplate>
-                                <span onclick="return confirm('Are you sure you want to delete this record?')">
-                                    <asp:LinkButton ID="lnkDelete" runat="server" Text="Delete" CommandName="Delete" />
-                                </span>
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                    </Columns>
-                </asp:GridView>
+                <asp:GridView ID="gvLunchSupportAlloc" runat="server">
+                    </asp:GridView>
+
                 <asp:Label ID="lblLunchSupportError" runat="server" />
             </asp:Panel>
             <asp:GridView ID="gvLunchSupportTipsEarned" runat="server">
                 </asp:GridView>
-            
+
+            <asp:Button ID="btnEditLunchSupportHours" runat="server" Text="Edit Lunch Support Hours" 
+                OnClick="btnEditLunchSupportHours_Click"/>
+            <br/>
+            <asp:GridView ID="gvEditLunchSupportHours" runat="server"
+                AllowSorting="True" 
+                AutoGenerateColumns="False" 
+                DataKeyNames="GratuityID,UserID,EmployeeID" 
+                Visible="False"
+                OnRowEditing = "gvLunchSupportTipAlloc_RowEditing" 
+                OnRowCancelingEdit = "gvLunchSupportTipAlloc_RowCancelingEdit"
+                OnRowUpdating = "gvLunchSupportTipAlloc_RowUpdating"
+                OnRowDeleting = "gvLunchSupportTipAlloc_DeleteRow">
+                <Columns>
+                    <asp:BoundField DataField="EmployeeName" HeaderText="Server" ReadOnly="True"
+                        SortExpression="EmployeeName" />
+                    <asp:BoundField DataField="HoursWorked" HeaderText="Hours Worked" 
+                        SortExpression="HoursWorked" />
+                    <asp:BoundField DataField="EmployeeID" HeaderText="EmployeeID" SortExpression="EmployeeID" Visible="False" />
+                    <asp:BoundField DataField="GratuityID" Visible="false" />
+                    <asp:BoundField DataField="UserID" HeaderText="UserID" SortExpression="UserID" Visible="False" />
+                    <asp:BoundField DataField="HoursWorked" HeaderText="HoursWorked" SortExpression="HoursWorked" Visible="False" />
+                    <asp:BoundField DataField="ShiftDate" HeaderText="ShiftDate" SortExpression="ShiftDate" Visible="False" />
+                    <asp:BoundField DataField="Shift" HeaderText="Shift" SortExpression="Shift" Visible="False" />
+                    <asp:BoundField DataField="CreatedBy" HeaderText="CreatedBy" SortExpression="CreatedBy" Visible="False" />
+                    <asp:BoundField DataField="LastUpdateDate" HeaderText="LastUpdateDate" SortExpression="LastUpdateDate" Visible="False" />
+                    <asp:BoundField DataField="LastCreatedBy" HeaderText="LastCreatedBy" SortExpression="LastCreatedBy" Visible="False" />
+                    <asp:BoundField DataField="DateCreated" HeaderText="DateCreated" SortExpression="DateCreated" Visible="False" />                        
+                    <asp:TemplateField HeaderText="">
+                        <ItemTemplate>
+                            <span onclick="return confirm('Are you sure you want to delete this record?')">
+                                <asp:LinkButton ID="lnkDelete" runat="server" Text="Delete" CommandName="Delete" />
+                            </span>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                </Columns>
+            </asp:GridView>
+
+
                 <br />
-
-            
-
+           
             <br />
             <br />
 
@@ -267,7 +266,6 @@
                         <asp:BoundField DataField="LastUpdateDate" HeaderText="LastUpdateDate" SortExpression="LastUpdateDate" Visible="False" />
                         <asp:BoundField DataField="LastCreatedBy" HeaderText="LastCreatedBy" SortExpression="LastCreatedBy" Visible="False" />
                         <asp:BoundField DataField="DateCreated" HeaderText="DateCreated" SortExpression="DateCreated" Visible="False" />                    
-                        
                         <asp:TemplateField HeaderText="">
                             <ItemTemplate>
                                 <span onclick="return confirm('Are you sure you want to delete this record?')">
@@ -311,15 +309,13 @@
                 
 
                 <br />
-                    <asp:GridView ID="gvDinnerSupportAlloc" runat="server" AllowSorting="True" AutoGenerateColumns="False" 
+                    <asp:GridView ID="gvDinnerSupportAlloc" runat="server" AllowSorting="True" 
+                        AutoGenerateColumns="False" 
                     DataKeyNames="GratuityID,EmployeeID,UserID" Visible="False">
                     <Columns>
 <%--                        <asp:CommandField ShowEditButton="True" />
                         <asp:BoundField DataField="EmployeeName" HeaderText="Select Server" ReadOnly="True" SortExpression="EmployeeName" />
                         <asp:BoundField DataField="HoursWorked" HeaderText="Hours Worked" SortExpression="HoursWorked" >
-                        <ItemStyle HorizontalAlign="Right" />
-                        </asp:BoundField>
-                        <asp:BoundField DataField="TipsEarnedSupport" ReadOnly="True" HeaderText="Support Staff Tips Earned" SortExpression="TipsEarnedSupport" DataFormatString="{0:c}" >
                         <ItemStyle HorizontalAlign="Right" />
                         </asp:BoundField>
                         <asp:CommandField ShowDeleteButton="True" />--%>
@@ -332,10 +328,6 @@
                         <asp:BoundField DataField="EmployeeName" HeaderText="Select Server" ReadOnly="True" SortExpression="EmployeeName" />
                         <asp:BoundField DataField="HoursWorked" HeaderText="Hours Worked" SortExpression="HoursWorked" >
                         <ItemStyle HorizontalAlign="Right" />
-                        </asp:BoundField>
-                        <asp:BoundField DataField="TipsEarnedSupport" ReadOnly="True" HeaderText="Support Staff Tips Earned" SortExpression="TipsEarnedSupport" DataFormatString="{0:c}" >
-                        <ItemStyle HorizontalAlign="Right" />
-                        </asp:BoundField>
                         <asp:CommandField ShowDeleteButton="True" />
                     </Columns>--%>
                 <%--</asp:GridView>--%>
@@ -371,8 +363,8 @@
             <asp:SqlDataSource ID="sdsGratuity" runat="server" 
                 ConnectionString="<%$ ConnectionStrings:ConnectionString %>" 
                 DeleteCommand="DELETE FROM [Gratuity] WHERE [GratuityID] = @GratuityID" 
-                InsertCommand="INSERT INTO Gratuity(EmployeeID, UserID, GrossSales, TipsEarned, TipsAllocated, TipPercentAllocated, TipPercentContributed, HoursWorked, DateCreated, Shift, ShiftDate, CreatedBy, LastUpdateDate, LastCreatedBy, TipsEarnedSupport) VALUES (@EmployeeID, @UserID, @GrossSales, @TipsEarned, @TipsAllocated, @TipPercentAllocated, @TipPercentContributed, @HoursWorked, @DateCreated, @Shift, @ShiftDate, @CreatedBy, @LastUpdateDate, @LastCreatedBy, @TipsEarnedSupport)" SelectCommand="SELECT Gratuity.GratuityID, Gratuity.EmployeeID, Gratuity.UserID, Gratuity.GrossSales, Gratuity.TipsEarned, Gratuity.TipsAllocated, Gratuity.TipPercentAllocated, Gratuity.TipPercentContributed, Gratuity.HoursWorked, Gratuity.Shift, Gratuity.ShiftDate, Gratuity.CreatedBy, Gratuity.LastUpdateDate, Gratuity.LastCreatedBy, Employee.FirstName + ' ' + Employee.LastName AS EmployeeName, Gratuity.DateCreated, Gratuity.TipsEarnedSupport FROM Gratuity INNER JOIN Employee ON Gratuity.EmployeeID = Employee.EmployeeID" 
-                UpdateCommand="UPDATE Gratuity SET EmployeeID = @EmployeeID, UserID = @UserID, GrossSales = @GrossSales, TipsEarned = @TipsEarned, TipsAllocated = @TipsAllocated, TipPercentAllocated = @TipPercentAllocated, TipPercentContributed = @TipPercentContributed, HoursWorked = @HoursWorked, DateCreated = @DateCreated, Shift = @Shift, ShiftDate = @ShiftDate, CreatedBy = @CreatedBy, LastUpdateDate = @LastUpdateDate, LastCreatedBy = @LastCreatedBy, TipsEarnedSupport = @TipsEarnedSupport, WHERE (GratuityID = @GratuityID)">
+                InsertCommand="INSERT INTO Gratuity(EmployeeID, UserID, GrossSales, TipsEarned, TipsAllocated, TipPercentAllocated, TipPercentContributed, HoursWorked, DateCreated, Shift, ShiftDate, CreatedBy, LastUpdateDate, LastCreatedBy) VALUES (@EmployeeID, @UserID, @GrossSales, @TipsEarned, @TipsAllocated, @TipPercentAllocated, @TipPercentContributed, @HoursWorked, @DateCreated, @Shift, @ShiftDate, @CreatedBy, @LastUpdateDate, @LastCreatedBy)" SelectCommand="SELECT Gratuity.GratuityID, Gratuity.EmployeeID, Gratuity.UserID, Gratuity.GrossSales, Gratuity.TipsEarned, Gratuity.TipsAllocated, Gratuity.TipPercentAllocated, Gratuity.TipPercentContributed, Gratuity.HoursWorked, Gratuity.Shift, Gratuity.ShiftDate, Gratuity.CreatedBy, Gratuity.LastUpdateDate, Gratuity.LastCreatedBy, Employee.FirstName + ' ' + Employee.LastName AS EmployeeName, Gratuity.DateCreated FROM Gratuity INNER JOIN Employee ON Gratuity.EmployeeID = Employee.EmployeeID" 
+                UpdateCommand="UPDATE Gratuity SET EmployeeID = @EmployeeID, UserID = @UserID, GrossSales = @GrossSales, TipsEarned = @TipsEarned, TipsAllocated = @TipsAllocated, TipPercentAllocated = @TipPercentAllocated, TipPercentContributed = @TipPercentContributed, HoursWorked = @HoursWorked, DateCreated = @DateCreated, Shift = @Shift, ShiftDate = @ShiftDate, CreatedBy = @CreatedBy, LastUpdateDate = @LastUpdateDate, LastCreatedBy = @LastCreatedBy, WHERE (GratuityID = @GratuityID)">
                 <DeleteParameters>
                     <asp:Parameter Name="GratuityID" Type="Int32" />
                 </DeleteParameters>
@@ -391,7 +383,6 @@
                     <asp:Parameter Name="CreatedBy" Type="String" />
                     <asp:Parameter Name="LastUpdateDate" Type="DateTime" />
                     <asp:Parameter Name="LastCreatedBy" Type="String" />
-                    <asp:Parameter Name="TipsEarnedSupport" Type="Decimal" />
                 </InsertParameters>
                 <UpdateParameters>
                     <asp:Parameter Name="EmployeeID" Type="Int32" />
@@ -409,7 +400,6 @@
                     <asp:Parameter Name="LastUpdateDate" Type="DateTime" />
                     <asp:Parameter Name="LastCreatedBy" Type="String" />
                     <asp:Parameter Name="GratuityID" Type="Int32" />
-                    <asp:Parameter Name="TipsEarnedSupport" Type="Decimal" />
                 </UpdateParameters>
             </asp:SqlDataSource>
             

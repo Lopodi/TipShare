@@ -57,7 +57,8 @@ namespace TipShareV2.Webpages
 
             gvDinnerTipAlloc.Visible = true;
             gvDinnerSupportAlloc.Visible = true;
-         // add another gv for dinner support to display allocations?? gvDinnerSupportTipsEarned.Visible = true;
+            gvEditLunchSupportHours.Visible = false; //Do not display grid to edit support hours when changing date
+            // add another gv for dinner support to display allocations?? gvDinnerSupportTipsEarned.Visible = true;
 
             DataTable dtLunchServers = new DataTable();
             DataTable dtDinnerServers = new DataTable();
@@ -130,7 +131,6 @@ namespace TipShareV2.Webpages
                 connTipAlloc.Open();
                 SqlDataReader drLunchServerTipsAllocation = cmdLunchTipAllocationServer.ExecuteReader(CommandBehavior.CloseConnection);
                 dtLunchServers.Load(drLunchServerTipsAllocation);
-
             }
 
             catch (Exception ex)
@@ -197,8 +197,8 @@ namespace TipShareV2.Webpages
 
             }
 
-              gvLunchSupportTipsEarned.DataSource = dtLunchSupportStaff;
-              gvLunchSupportTipsEarned.DataBind();
+              gvLunchSupportAlloc.DataSource = dtLunchSupportStaff;
+              gvLunchSupportAlloc.DataBind();
 
             // retrieve dinner support data -->
 
@@ -985,7 +985,6 @@ namespace TipShareV2.Webpages
             string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             using (connTipAlloc = new SqlConnection(connString))
             {
-
                 DataTable gridTableSupportStaff = new DataTable();
 
                 //stored procedure
@@ -1134,26 +1133,73 @@ namespace TipShareV2.Webpages
 
 //Editing lunch support for a particular day -->
 
+        protected void btnEditLunchSupportHours_Click(object sender, EventArgs e)
+        {
+            DateTime shiftDate = cldShiftDate.SelectedDate;
+            DataTable dtEditSupportHours = new DataTable();
+
+            string connStringSupport = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            connTipAlloc = new SqlConnection(connStringSupport);
+
+            SqlCommand cmdEditLunchSupportHours = new SqlCommand("spEditSupportHours", connTipAlloc);
+            cmdEditLunchSupportHours.CommandType = CommandType.StoredProcedure;
+
+            SqlParameter DateBeginSupportParameter = new SqlParameter("@ShiftDateBegin", shiftDate.ToShortDateString());
+            cmdEditLunchSupportHours.Parameters.Add(DateBeginSupportParameter);
+
+            SqlParameter DateEndSupportParameter = new SqlParameter("@ShiftDateEnd", shiftDate.ToShortDateString());
+            cmdEditLunchSupportHours.Parameters.Add(DateEndSupportParameter);
+
+            SqlParameter shiftSupportParameter = new SqlParameter("@Shift", "Lunch");
+            cmdEditLunchSupportHours.Parameters.Add(shiftSupportParameter);
+
+            try
+
+            {
+                connTipAlloc.Open();
+                SqlDataReader drHours = cmdEditLunchSupportHours.ExecuteReader(CommandBehavior.CloseConnection);
+                dtEditSupportHours.Load(drHours);
+            }
+
+            catch (Exception ex)
+
+            {
+                Response.Write("Error occured" + ex.Message);
+            }
+
+            finally
+
+            {
+                connTipAlloc.Close();
+            }
+            gvEditLunchSupportHours.DataSource = dtEditSupportHours;
+            gvEditLunchSupportHours.DataBind();
+            //gvLunchSupportAlloc.Visible = false;
+            //gvLunchSupportTipsEarned.Visible = false;
+            gvEditLunchSupportHours.Visible = true;
+        }
+
         protected void gvLunchSupportTipAlloc_RowEditing(object sender, GridViewEditEventArgs e)
         {
         }
 
-        protected void gvLunchSupportTipAlloc_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
-        {
-        }
+            protected void gvLunchSupportTipAlloc_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+            {
+            }
 
-        protected void gvLunchSupportTipAlloc_RowUpdating(object sender, GridViewUpdateEventArgs e)
-        {
-        }
+            protected void gvLunchSupportTipAlloc_RowUpdating(object sender, GridViewUpdateEventArgs e)
+            {
+            }
 
-        //Delete lunch support from a particular day -->
+//Delete lunch support from a particular day -->
         protected void gvLunchSupportTipAlloc_DeleteRow(object sender, GridViewDeleteEventArgs e)
         {
-            var GratuityID = gvLunchSupportAlloc.DataKeys[e.RowIndex].Value;
+            var GratuityID = gvEditLunchSupportHours.DataKeys[e.RowIndex].Value;
             DateTime shiftDate = cldShiftDate.SelectedDate;
 
             string connString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             using (connTipAlloc = new SqlConnection(connString))
+
             {
                 string sqlDelete = "Delete from Gratuity where GratuityID = @GratuityID";
                 using (SqlCommand cmdDelete = new SqlCommand(sqlDelete, connTipAlloc))
@@ -1203,13 +1249,18 @@ namespace TipShareV2.Webpages
                     connTipAlloc.Close();
                 }
 
-                gvLunchSupportTipsEarned.DataSource = gridTableSupportStaff;
-                gvLunchSupportTipsEarned.DataBind();
+                //gvEditLunchSupportHours.DataSource = gridTableSupportStaff;
+                //gvEditLunchSupportHours.DataBind();
+                //gvEditLunchSupportHours.Visible = true;
+                gvLunchSupportAlloc.DataSource = gridTableSupportStaff;
+                gvLunchSupportAlloc.DataBind();
                 gvLunchSupportAlloc.Visible = true;
-                //gvLunchSupportTipsEarned.Visible = true;
+                gvEditLunchSupportHours.Visible = false;
+                gvLunchSupportTipsEarned.Visible = false;
 
             }
         }
+        
         //Edit dinner servers for a particular day -->
 
         protected void gvDinnerTipAlloc_RowEditing(object sender, GridViewEditEventArgs e)
@@ -1283,7 +1334,6 @@ namespace TipShareV2.Webpages
             }
 
         }
-
 
     }
 }
